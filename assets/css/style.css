@@ -1,0 +1,43 @@
+#popup-widget {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  display: none;
+  position: relative;
+}
+#popup-widget button {
+  background-color: #009bca;
+  color: #fff;
+  border-radius: 3px;
+  border: 1px solid #009BCF;
+  font-size: smaller;
+  padding: 10px;
+  margin: 5px;
+  width: 100px;
+  cursor: pointer;
+}
+#popup-widget button:hover {
+  background-color: #047fca;
+}
+#popup-widget .button-container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.alert__success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+.alert__danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.cancel {
+  float: right;
+}
+
+/*# sourceMappingURL=style.css.map */
