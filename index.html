@@ -9,18 +9,16 @@
 </head>
 <body>
     <div id="popup-widget" class="alert">
-        <i class="cancel far fa-window-close fa-2x"></i>
-        <div>
-            <i id="popup-icon"></i>
-            <div class="message"></div>
-        </div>
+        <i class="cancel far fa-window-close fa-2x" onclick="popupWidget.decline()"></i>
+        <p class="message">
+        </p>
         <div class="button-container">
             <button onclick='popupWidget.accept()'>Akkoord</button>
             <button onclick='popupWidget.decline()'>Weigeren</button>
         </div>
     </div>
 
-    <button onclick='popupWidget.draw("Karen wil deelnemen aan jouw spel. Geef akkoord. Hoer.", "success");'>Gelukt</button>
+    <button onclick='popupWidget.draw("Karen wil deelnemen aan jouw spel. Geef akkoord.", "success");'>Gelukt</button>
     <button onclick='popupWidget.draw("Je gegevens konden niet worden opgehaald. Zo jammer. Echt jammer. Helaas.", "failed");'>Mislukt</button>
 </body>
     <script src="assets/js/app.js"></script>

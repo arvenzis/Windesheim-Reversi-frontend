@@ -20,9 +20,19 @@
   background-color: #047fca;
 }
 #popup-widget .button-container {
+  display: none;
   position: absolute;
   right: 0;
   bottom: 0;
+}
+#popup-widget #popup-icon {
+  margin-right: 30px;
+}
+#popup-widget .cancel {
+  right: 5px;
+  top: 0;
+  position: absolute;
+  cursor: pointer;
 }
 
 .alert__success {
@@ -34,10 +44,6 @@
   color: #a94442;
   background-color: #f2dede;
   border-color: #ebccd1;
-}
-
-.cancel {
-  float: right;
 }
 
 /*# sourceMappingURL=style.css.map */

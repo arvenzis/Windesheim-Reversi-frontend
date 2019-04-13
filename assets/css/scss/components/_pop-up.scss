@@ -24,9 +24,21 @@
   }
 
   .button-container {
+    display: none;
     position: absolute;
     right: 0;
     bottom: 0;
+  }
+
+  #popup-icon {
+    margin-right: 30px;
+  }
+
+  .cancel {
+    right: 5px;
+    top: 0;
+    position: absolute;
+    cursor: pointer;
   }
 }
 
@@ -42,8 +54,4 @@
     background-color: #f2dede;
     border-color: #ebccd1;
   }
-}
-
-.cancel {
-  float: right;
 }

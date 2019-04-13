@@ -3,30 +3,30 @@ var popupWidget = (function() {
     var popup = $("#popup-widget");
 
     var draw = function(messageText, messageType) {
-        popup.find(".message").text(messageText);
+        popup.find(".message").html("<i id='popup-icon'></i>" + messageText);
 
         if (messageType === "success") {
-            popup.append("");
             popup.find('#popup-icon').addClass('fas fa-thumbs-up fa-4x');
+            popup.find('.button-container').show();
+
+            popup.removeClass('alert__danger');
             popup.addClass('alert__success');
         } else if (messageType === "failed") {
-          popup.addClass('alert__danger')
+            popup.find('#popup-icon').addClass('fas fa-thumbs-down fa-4x');
+            popup.find('.button-container').hide();
+
+            popup.removeClass('alert__success');
+            popup.addClass('alert__danger')
         }
-        // popup.find(".yes,.no").unbind().click(function()
-        //         // {
-        //         //     popup.hide();
-        //         // });
-        //         // popup.find(".yes").click(yesFn);
-        //         // popup.find(".no").click(noFn);
+
         popup.show();
     };
 
     var accept = function() {
-      console.log('Bedankt voor het accepteren');
+        popup.hide();
     };
 
     var decline = function() {
-        console.log('Snolbol');
         popup.hide();
     };
 
