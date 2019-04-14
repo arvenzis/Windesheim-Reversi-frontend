@@ -2,7 +2,8 @@
 var popupWidget = (function() {
     var popup = $("#popup-widget");
 
-    var draw = function(messageText, messageType) {
+    function draw(messageText, messageType) {
+        //@ToDo: De laatste tien berichten worden in localstorage opgeslagen
         popup.find(".message").html("<i id='popup-icon'></i>" + messageText);
 
         if (messageType === "success") {
@@ -11,24 +12,28 @@ var popupWidget = (function() {
 
             popup.removeClass('alert__danger');
             popup.addClass('alert__success');
+
+            return true;
         } else if (messageType === "failed") {
             popup.find('#popup-icon').addClass('fas fa-thumbs-down fa-4x');
             popup.find('.button-container').hide();
 
             popup.removeClass('alert__success');
-            popup.addClass('alert__danger')
+            popup.addClass('alert__danger');
+
+            return false;
         }
 
         popup.show();
-    };
+    }
 
-    var accept = function() {
+    function accept() {
         popup.hide();
-    };
+    }
 
-    var decline = function() {
+    function decline() {
         popup.hide();
-    };
+    }
 
     return {
         draw,
