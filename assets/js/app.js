@@ -1,3 +1,25 @@
+var Spa = (function() {
+    function ini() {
+        return true;
+    }
+
+    function Data() {
+
+    }
+
+    function Model() {
+
+    }
+
+    function Reversi() {
+
+    }
+
+    return {
+        ini,
+    }
+})();
+
 /* Different name than feedback widget, because I think that name is misleading */
 var popupWidget = (function() {
     var popup = $("#popup-widget");
