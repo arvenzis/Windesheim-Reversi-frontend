@@ -5,21 +5,18 @@
     <title>Reversi</title>
     <link type="text/css" rel="stylesheet" href="assets/css/style.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 </head>
 <body>
-    <div id="popup-widget" class="alert">
-        <i class="cancel far fa-window-close fa-2x" onclick="popupWidget.decline()"></i>
-        <p class="message">
-        </p>
-        <div class="button-container">
-            <button onclick='popupWidget.accept()'>Akkoord</button>
-            <button onclick='popupWidget.decline()'>Weigeren</button>
-        </div>
-    </div>
-
-    <button onclick='popupWidget.draw("Karen wil deelnemen aan jouw spel. Geef akkoord.", "success");'>Gelukt</button>
-    <button onclick='popupWidget.draw("Je gegevens konden niet worden opgehaald. Zo jammer. Echt jammer. Helaas.", "failed");'>Mislukt</button>
+    <button onclick='SPA.Popup.show("Karen wil deelnemen aan jouw spel. Geef akkoord.", "success");'>Gelukt</button>
+    <button onclick='SPA.Popup.show("Je gegevens konden niet worden opgehaald. Zo jammer. Echt jammer. Helaas.", "failed");'>Mislukt</button>
 </body>
-<script src="assets/js/app.js"></script>
+<script type="text/javascript" src="assets/js/app.js"></script>
+<script type="text/javascript" src="assets/js/components/popup.js"></script>
+<script type="text/javascript" src="assets/js/helpers/alert-type-enum.js"></script>
+<script>
+    $(function(){
+        SPA.init();
+    });
+</script>
 </html>

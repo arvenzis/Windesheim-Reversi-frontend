@@ -1,11 +1,10 @@
-#popup-widget {
+#popup {
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
-  display: none;
   position: relative;
 }
-#popup-widget button {
+#popup button {
   background-color: #009bca;
   color: #fff;
   border-radius: 3px;
@@ -16,19 +15,19 @@
   width: 100px;
   cursor: pointer;
 }
-#popup-widget button:hover {
+#popup button:hover {
   background-color: #047fca;
 }
-#popup-widget .button-container {
+#popup .button-container {
   display: none;
   position: absolute;
   right: 0;
   bottom: 0;
 }
-#popup-widget #popup-icon {
+#popup #popup-icon {
   margin-right: 30px;
 }
-#popup-widget .cancel {
+#popup .cancel {
   right: 5px;
   top: 0;
   position: absolute;

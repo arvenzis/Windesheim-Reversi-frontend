@@ -1,0 +1,47 @@
+<html>
+<head>
+    <link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine/jasmine.css">
+    <script type="text/javascript" src="../js/jquery-3.4.0.js"></script>
+    <script type="text/javascript" src="jasmine/lib/jasmine/jasmine.js"></script>
+    <script type="text/javascript" src="jasmine/lib/jasmine/jasmine-html.js"></script>
+    <script type="text/javascript" src="jasmine/lib/jasmine/boot.js"></script>
+    <script type="text/javascript" src="jasmine/lib/jasmine/mock-ajax.js"></script>
+	<script type="text/javascript" src="../assets/js/app.js"></script>
+    <script type="text/javascript" src="../assets/js/components/popup.js"></script>
+    <script type="text/javascript" src="../assets/js/helpers/alert-type-enum.js"></script>
+</head>
+<body>
+
+<script>
+    SPA.init();
+
+    describe("Testing the popup", function() {
+       beforeEach(function() {
+          jasmine.Ajax.install();
+       });
+
+       it("Should show popup on error", function() {
+           spyOn(SPA.Popup, "show");
+
+           SPA.Weather.getData();
+
+           let request = jasmine.Ajax.requests.mostRecent();
+           request.respondWith({
+               "status": 401,
+               "contentType": "text/plain",
+               "responseText": "FORBIDDEN"
+           });
+
+           expect(SPA.Popup.show).toHaveBeenCalled();
+       });
+
+        afterEach(function() {
+            jasmine.Ajax.uninstall();
+        });
+    });
+</script>
+
+
+</body>
+</html>
