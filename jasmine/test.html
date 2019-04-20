@@ -1,12 +1,12 @@
 <html>
 <head>
-    <link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine/jasmine_favicon.png">
-    <link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine/jasmine.css">
-    <script type="text/javascript" src="../js/jquery-3.4.0.js"></script>
-    <script type="text/javascript" src="jasmine/lib/jasmine/jasmine.js"></script>
-    <script type="text/javascript" src="jasmine/lib/jasmine/jasmine-html.js"></script>
-    <script type="text/javascript" src="jasmine/lib/jasmine/boot.js"></script>
-    <script type="text/javascript" src="jasmine/lib/jasmine/mock-ajax.js"></script>
+    <link rel="shortcut icon" type="image/png" href="../jasmine/lib/jasmine/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="../jasmine/lib/jasmine/jasmine.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script type="text/javascript" src="../jasmine/lib/jasmine/jasmine.js"></script>
+    <script type="text/javascript" src="../jasmine/lib/jasmine/jasmine-html.js"></script>
+    <script type="text/javascript" src="../jasmine/lib/jasmine/boot.js"></script>
+    <script type="text/javascript" src="../jasmine/lib/jasmine/mock-ajax.js"></script>
 	<script type="text/javascript" src="../assets/js/app.js"></script>
     <script type="text/javascript" src="../assets/js/components/popup.js"></script>
     <script type="text/javascript" src="../assets/js/helpers/alert-type-enum.js"></script>
@@ -16,29 +16,38 @@
 <script>
     SPA.init();
 
-    describe("Testing the popup", function() {
-       beforeEach(function() {
-          jasmine.Ajax.install();
-       });
+    describe("Mock get games requests", function() {
+        beforeEach(function() {
+            jasmine.Ajax.install();
+        });
 
-       it("Should show popup on error", function() {
-           spyOn(SPA.Popup, "show");
+        it("Should show an error on a bad request", function() {
+            spyOn(SPA.Popup, "show");
 
-           SPA.Weather.getData();
-
-           let request = jasmine.Ajax.requests.mostRecent();
-           request.respondWith({
+            let request = jasmine.Ajax.mostRecent();
+            request.respondWith({
                "status": 401,
-               "contentType": "text/plain",
-               "responseText": "FORBIDDEN"
-           });
+                "contentType": "text/plain",
+                "responseText": "FORBIDDEN"
+            });
 
-           expect(SPA.Popup.show).toHaveBeenCalled();
-       });
+            expect(SPA.Popup.show).toHaveBeenCalled();
+        });
+
+        it("Should return games when api/getGames is called", function() {
+
+        });
 
         afterEach(function() {
             jasmine.Ajax.uninstall();
         });
+    });
+
+    describe("Testing the popup", function() {
+       it("Should show popup", function() {
+           spyOn(SPA.Popup, "show");
+           expect(SPA.Popup.show).toHaveBeenCalled();
+       });
     });
 </script>
 
