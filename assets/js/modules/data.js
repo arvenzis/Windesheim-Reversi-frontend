@@ -1,7 +1,6 @@
 SPA.data = (function() {
     var configMap;
-    const base_url = "http://api.openweathermap.org/data/2.5/weather?q=####&APPID=????";
-    const api = "38c54cfa93fde5b1a7a55e4c7f6943e0";
+    const uri = "https://localhost:5003/";
 
     function init(env, endpoints){
         configMap = {
@@ -13,12 +12,12 @@ SPA.data = (function() {
     function getGames() {
         if (configMap.environment === "production") {
             $.ajax({
-                url: base_url + configMap.endpoints,
-                success: function() {
-                    console.log('jep');
+                url: uri + configMap.endpoints,
+                success: function(game) {
+                    document.getElementById("spa").innerHTML = game;
                 },
                 error: function() {
-                    console.log('nein');
+                    throw new Error("kapot henk");
                 }
             });
         }
