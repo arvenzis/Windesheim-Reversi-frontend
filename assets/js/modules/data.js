@@ -14,7 +14,7 @@ SPA.data = (function() {
             $.ajax({
                 url: uri + configMap.endpoints,
                 success: function(game) {
-                    document.getElementById("spa").innerHTML = game;
+                    document.getElementById("spa").innerHTML = game.id;
                 },
                 error: function() {
                     throw new Error("kapot henk");

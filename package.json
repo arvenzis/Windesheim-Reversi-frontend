@@ -1,16 +1,20 @@
 {
   "name": "reversi-frontend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "dependencies": {
-    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-update": "0.0.2",
     "jasmine": "^3.4.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.1",
+    "gulp-concat": "^2.6.1"
+  },
   "scripts": {
     "test": "jasmine"
   },
@@ -23,5 +27,6 @@
   "bugs": {
     "url": "https://github.com/arvenzis/Reversi-frontend/issues"
   },
-  "homepage": "https://github.com/arvenzis/Reversi-frontend#readme"
+  "homepage": "https://github.com/arvenzis/Reversi-frontend#readme",
+  "description": ""
 }
