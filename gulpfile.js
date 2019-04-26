@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const { src, dest, parallel } = require('gulp');
+const { src, parallel } = require('gulp');
 
 /** EVERYTHING RELATED TO HTML **/
 let html_files = './*.html';
@@ -13,15 +13,19 @@ function html() {
 const clean_css = require('gulp-clean-css');
 const auto_prefixer = require('gulp-autoprefixer');
 const concat = require('gulp-concat');
+const sass = require('gulp-sass');
 
-let css_files = './assets/css/**/*.css';
+sass.compiler = require('node-sass');
+
+let sass_files = './assets/css/scss/**/*.scss';
 
 function css() {
-   return src(css_files)
-           .pipe(clean_css({compatibility: 'ie9'}))
-           .pipe(auto_prefixer('last 2 version', 'safari 5', 'ie 9'))
-           .pipe(concat('style.min.css'))
-           .pipe(gulp.dest('./dist'));
+    return gulp.src(sass_files)
+            .pipe(sass().on('error', sass.logError))
+            .pipe(clean_css({compatibility: 'ie9'}))
+            .pipe(auto_prefixer('last 2 version', 'safari 5', 'ie 9'))
+            .pipe(concat('style.min.css'))
+            .pipe(gulp.dest('./dist'));
 }
 
 /** EVERYTHING RELATED TO JS **/
@@ -46,7 +50,7 @@ function js() {
 // Watch files
 function watch() {
     gulp.watch(html_files, html);
-    gulp.watch(css_files, css);
+    gulp.watch(sass_files, css);
     gulp.watch(js_files, js);
 }
 
