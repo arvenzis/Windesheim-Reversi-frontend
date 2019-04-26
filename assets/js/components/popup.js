@@ -1,8 +1,11 @@
 SPA.Popup = (function() {
     function show(title, message, type) {
+        let container = document.createElement(("div"));
+        container.setAttribute("id", "slide-up");
+
         let el = document.createElement("div");
         el.setAttribute("id", "popup");
-        el.setAttribute("class", type + " alert");
+        el.setAttribute("class", type + " alert fade-in");
         el.innerHTML =  "<i id='popup-icon' class='fas fa-thumbs-down fa-4x'></i>" +
                         "<div class='message'>" +
                             "<h3>" + title + "</h3>" +
@@ -11,12 +14,13 @@ SPA.Popup = (function() {
 
         if (type === AlertTypeEnum.success) {
             $(el).append("<div class='button-container'>" +
-                            "<button onclick='popupWidget.accept()'>Akkoord</button>" +
+                            "<button onclick='popupWidget.accept()' class='accept'>Akkoord</button>" +
                             "<button onclick='popupWidget.decline()'>Weigeren</button>" +
                          "</div>");
         }
 
-        document.getElementById("spa").appendChild(el);
+        document.getElementById("spa").appendChild(container);
+        document.getElementById("slide-up").appendChild(el);
     }
 
     function accept() {
