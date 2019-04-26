@@ -6,6 +6,8 @@
   position: relative;
 
   .message {
+    font-size: 25px;
+    font-family: Arial, sans-serif;
     margin-left: 7%;
   }
 
@@ -50,6 +52,23 @@
 
   p {
     margin-top: 0;
+  }
+
+  @media only screen and (max-width: 1000px) {
+    #popup-icon {
+      display: none;
+    }
+
+    .message {
+      font-size: 18px;
+      margin-left: 0;
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    .button-container {
+      position: relative;
+    }
   }
 }
 
