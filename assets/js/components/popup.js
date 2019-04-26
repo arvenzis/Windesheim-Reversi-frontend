@@ -1,4 +1,4 @@
-SPA.Popup = (function() {
+SPA.popup = (function() {
     function show(title, message, type) {
         let container = document.createElement(("div"));
         container.setAttribute("id", "slide-up");

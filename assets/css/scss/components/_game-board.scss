@@ -1,13 +1,31 @@
-.grid-container {
+#grid-container {
   display: grid;
-    grid-template-columns: repeat(8, 1fr);
-  background-color: #2196F3;
+  grid-template-columns: repeat(8, 1fr);
+  background-color: #8c5c29;
   padding: 10px;
+  width: 385px;
+  margin: 0 auto;
 }
 .grid-item {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(9, 154, 0, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 20px;
-  font-size: 30px;
-  text-align: center;
+  width: 96%;
+  height: 50px;
+  cursor: pointer;
+}
+
+.black-disc {
+  background-color: #000;
+  border-radius: 100%;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+}
+
+.white-disc {
+  background-color: #fff;
+  border-radius: 100%;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
 }
