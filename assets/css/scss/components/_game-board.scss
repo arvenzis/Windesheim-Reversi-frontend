@@ -6,12 +6,17 @@
   width: 385px;
   margin: 0 auto;
 }
+
 .grid-item {
   background-color: rgba(9, 154, 0, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.8);
   width: 96%;
   height: 50px;
   cursor: pointer;
+}
+
+.grid-item:hover {
+  background-color: rgba(9, 203, 0, 0.8);
 }
 
 .black-disc {
