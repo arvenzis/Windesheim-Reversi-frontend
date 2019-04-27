@@ -1,0 +1,1 @@
+const Disc = { "white" : "white", "black" : "black" };

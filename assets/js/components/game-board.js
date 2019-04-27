@@ -16,6 +16,38 @@ SPA.gameBoard = (function() {
                 $(blackDisc).appendTo(gridItem);
             }
         }
+
+        calculatePossibleMoves();
+    }
+
+    let fields = [];
+
+    function getDiscLocations(color) {
+        let discLocations = [];
+
+        for (let i = 1; i < fields.length; i++) {
+            if (fields[i] === color) {
+                discLocations.push(i);
+            }
+        }
+
+        return discLocations;
+    }
+
+    function calculatePossibleMoves() {
+        fields = [null, null, null, null, null, null, null, null,
+                      null, null, null, null, null, null, null, null,
+                      null, null, null, null, null, null, null, null,
+                      null, null, null, Disc.white, Disc.black, null, null, null,
+                      null, null, null, Disc.black, Disc.white, null, null, null,
+                      null, null, null, null, null, null, null, null,
+                      null, null, null, null, null, null, null, null,
+                      null, null, null, null, null, null, null, null]; // Krijg ik straks van de server
+
+        let blackDiscLocations = getDiscLocations(Disc.black);
+        let whiteDiscLocations = getDiscLocations(Disc.white);
+
+
     }
 
     $("#grid-container").click(function(e) {
