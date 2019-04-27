@@ -5,7 +5,7 @@ var SPA = (function() {
         $("body").append("<section id='spa'></section>");
         SPA.data.getGames();
         SPA.gameBoard.init();
-        //SPA.popup.show("Karen", "Is heel aardig", AlertTypeEnum.success);
+        //SPA.popup.show("Karen", "Is heel aardig", AlertType.success);
     }
 
     function Model() {

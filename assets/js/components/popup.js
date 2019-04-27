@@ -12,7 +12,7 @@ SPA.popup = (function() {
                             "<p>" + message + "</p>" +
                         "</div>";
 
-        if (type === AlertTypeEnum.success) {
+        if (type === AlertType.success) {
             $(el).append("<div class='button-container'>" +
                             "<button onclick='popupWidget.accept()' class='accept'>Akkoord</button>" +
                             "<button onclick='popupWidget.decline()'>Weigeren</button>" +
