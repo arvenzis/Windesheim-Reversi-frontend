@@ -32,10 +32,10 @@ SPA.gameBoard = (function() {
             null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null]; // Krijg ik straks van de server
 
-        initGameShizzles();
+        updateGameBoard();
     }
 
-    function initGameShizzles() { //Geef goede naam en/of zet dit ergens anders neer
+    function updateGameBoard() {
         let blackDiscLocations = getDiscLocations(Disc.black);
         let whiteDiscLocations = getDiscLocations(Disc.white);
 
@@ -57,16 +57,14 @@ SPA.gameBoard = (function() {
         let discLocations = [];
         let className = '.' + color + '-disc';
 
-        for (let i = 1; i < fields.length; i++) {
-            $(className).each(function(i, obj) {
-                discLocations.push(parseInt($(obj).parent().attr('id')));
-            });
-        }
+        $(className).each(function(i, obj) {
+            discLocations.push(parseInt($(obj).parent().attr('id')));
+        });
 
         return discLocations;
     }
 
-    function calculatePossibleMoves(discLocations, location) {
+    function calculatePossibleMoves(opponentDiscLocations, myDiscLocation) {
         let operators = {
             '+': function(first, second) { return first + second },
             '-': function(first, second) { return first - second },
@@ -76,8 +74,8 @@ SPA.gameBoard = (function() {
 
         for (let i = 1; i < fields.length; i++) {
             for (let x = 0; x < op.length; x++) {
-                let opponentDiscLocation = operators[op[x]](location, i);
-                if ($.inArray(opponentDiscLocation, discLocations) !== -1)
+                let opponentDiscLocation = operators[op[x]](myDiscLocation, i);
+                if ($.inArray(opponentDiscLocation, opponentDiscLocations) !== -1)
                 {
                     let availableField = operators[op[x]](opponentDiscLocation, i).toString(); //Misschien checken: is er links van de witte steen NOG een witte steen?
                     $('#' + availableField).addClass('available');
@@ -87,13 +85,55 @@ SPA.gameBoard = (function() {
     }
 
     $("#grid-container").click(function(e) {
-        let clickedFieldNr = $(e.target).closest('.available').attr('id').toString();
-        $('#' + clickedFieldNr).removeClass('available');
+        let clickedFieldId = $(e.target).closest('.available').attr('id').toString();
+        $('#' + clickedFieldId).removeClass('available');
 
+        addNewDisc(clickedFieldId);
         changeTurn(hasTurn);
 
-        initGameShizzles();
+        updateGameBoard();
     });
+
+    function addNewDisc(clickedFieldId) { // change name maybe?
+        let className = hasTurn + '-disc';
+
+        let newDisc = document.createElement('div');
+        newDisc.setAttribute('class', className);
+
+        document.getElementById(clickedFieldId).appendChild(newDisc);
+
+
+
+        let operators = {
+            '+': function(first, second) { return first + second },
+            '-': function(first, second) { return first - second },
+        };
+
+        let op = ['+', '-'];
+        let opponentDiscLocations = getDiscLocations(Disc.white);
+        let myDiscLocations = getDiscLocations(Disc.black);
+
+        opponentDiscLocations.forEach(function(opponentDiscLocation, i) {
+
+                for (let x = 0; x < op.length; x++) {
+
+                    if (operators[op[x]](myDiscLocations[i], i) === opponentDiscLocation) {
+                        //Misschien checken: is er links van de witte steen NOG een witte steen?
+                        let newDisc = document.createElement('div');
+                        newDisc.setAttribute('class', className);
+
+                        let newDiscId = operators[op[x]](myDiscLocations[i], i).toString();
+
+                        while (document.getElementById(newDiscId).hasChildNodes()) {
+                            document.getElementById(newDiscId).removeChild(document.getElementById(newDiscId).lastChild);
+                        }
+
+                        document.getElementById(newDiscId).appendChild(newDisc);
+                    }
+                }
+
+        });
+    }
 
     function changeTurn(color) {
         if (color === Disc.white) {
