@@ -3,6 +3,8 @@ SPA.gameBoard = (function() {
         for(let i = 1; i < 65; i++) {
             let gridItem = document.createElement('div');
             gridItem.setAttribute('class', 'grid-item');
+            gridItem.setAttribute('id', i.toString());
+
             document.getElementById('grid-container').appendChild(gridItem);
 
             if (i === 28 || i === 37) {
@@ -27,14 +29,14 @@ SPA.gameBoard = (function() {
 
         for (let i = 1; i < fields.length; i++) {
             if (fields[i] === color) {
-                discLocations.push(i);
+                discLocations.push(i + 1); // because arrays start at 0 ;-)
             }
         }
 
         return discLocations;
     }
 
-    function calculatePossibleMoves() {
+    function calculatePossibleMoves(color = Disc.black) {
         fields = [null, null, null, null, null, null, null, null,
                       null, null, null, null, null, null, null, null,
                       null, null, null, null, null, null, null, null,
@@ -44,9 +46,36 @@ SPA.gameBoard = (function() {
                       null, null, null, null, null, null, null, null,
                       null, null, null, null, null, null, null, null]; // Krijg ik straks van de server
 
-        let blackDiscLocations = getDiscLocations(Disc.black);
-        let whiteDiscLocations = getDiscLocations(Disc.white);
+        let blackDiscLocations = getDiscLocations(Disc.black); //me
+        let whiteDiscLocations = getDiscLocations(Disc.white); //opponent
 
+        whiteDiscLocations.forEach(function(location) {
+            console.log("white: " + location);
+
+        });
+
+        let operators = {
+            '+': function(first, second) { return first + second },
+            '-': function(first, second) { return first - second },
+        };
+
+        let op = ['+', '-'];
+
+        blackDiscLocations.forEach(function(location) {
+            for (let i = 1; i < fields.length; i++) {
+                for (let x = 0; x < op.length; x++) {
+                    let whiteDiscLocation = operators[op[x]](location, i);
+                    if ($.inArray(whiteDiscLocation, whiteDiscLocations) !== -1)
+                    {
+                        let availableField = operators[op[x]](whiteDiscLocation, i); //Misschien checken: is er links van de witte steen NOG een witte steen?
+                        availableField = availableField.toString();
+                        $('#' + availableField).addClass('available');
+                    }
+                }
+            }
+        });
+
+        //Als ik het vak aanklik, ligt de zwarte steen (tegenstander) dan tussen twee van mijn eigen stenen?
 
     }
 

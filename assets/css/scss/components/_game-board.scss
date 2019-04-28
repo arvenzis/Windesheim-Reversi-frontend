@@ -12,11 +12,11 @@
   border: 1px solid rgba(0, 0, 0, 0.8);
   width: 96%;
   height: 50px;
-  cursor: pointer;
 }
 
-.grid-item:hover {
+.available:hover {
   background-color: rgba(9, 203, 0, 0.8);
+  cursor: pointer;
 }
 
 .black-disc {
