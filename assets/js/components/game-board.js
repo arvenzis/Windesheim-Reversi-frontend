@@ -104,16 +104,34 @@ SPA.gameBoard = (function() {
 
         let op = ['+', '-'];
 
-        for (let i = 1; i < fields.length; i++) {
-            for (let x = 0; x < op.length; x++) {
-                let opponentDiscLocation = operators[op[x]](myDiscLocation, i);
-                if ($.inArray(opponentDiscLocation, opponentDiscLocations) !== -1)
-                {
-                    let availableField = operators[op[x]](opponentDiscLocation, i).toString(); //Misschien checken: is er links van de witte steen NOG een witte steen?
-                    $('.tile[data-id="'+availableField+'"]').addClass('available');
-                }
+
+        var grid2D = [
+            [0, 1, 2, 3, 4, 5, 6, 7],
+            [8, 9, 10, 11, 12, 13, 14, 15],
+            [16, 18, 19, 20, 21, 23, 24],
+            [25, 27, 28, 29, 30, 31, 32],
+            [33, 35, 36, 37, 38, 39, 40],
+            [41, 43, 44, 45, 46, 47, 48],
+            [49, 51, 52, 53, 54, 55, 56],
+            [57, 59, 60, 61, 62, 63, 64],
+        ];
+
+        for (let i = 0; i < grid2D.length; i++) {
+            for (let x = 0; x < grid2D[i].length; x++) {
+                console.log(grid2D[i][x]);
             }
         }
+
+        // for (let i = 1; i < fields.length; i++) {
+        //     for (let x = 0; x < op.length; x++) {
+        //         let opponentDiscLocation = operators[op[x]](myDiscLocation, i);
+        //         if ($.inArray(opponentDiscLocation, opponentDiscLocations) !== -1)
+        //         {
+        //             let availableField = operators[op[x]](opponentDiscLocation, i).toString(); //Misschien checken: is er links van de witte steen NOG een witte steen?
+        //             $('.tile[data-id="'+availableField+'"]').addClass('available');
+        //         }
+        //     }
+        // }
     }
 
     $("#grid-container").click(function(e) {
@@ -130,101 +148,9 @@ SPA.gameBoard = (function() {
         let newDisc = createDisc(hasTurn);
 
         $('.tile[data-id="'+clickedFieldId+'"]').append(newDisc);
-        checkAdjacentPossibilities(clickedFieldId);
         // -9 is altijd schuin boven het item
         // +9 is altijd schuin onder het item
         // -1 is ernaast, -1 + -1 is twee ernaast. Snap je me nog? Ja
-    }
-
-    function checkAdjacentPossibilities(id){
-        id = parseInt(id);
-
-        let opponentDiscClass = '.' + opponentDisc() + '-disc';
-
-        let bottomSelector = $(`.tile[data-id=${id + 8}]`);
-        let topSelector = $(`.tile[data-id=${id - 8}]`);
-        let rightSelector = $(`.tile[data-id=${id + 1}]`);
-        let leftSelector = $(`.tile[data-id=${id - 1}]`);
-
-        let rightBottomSelector = $(`.tile[data-id=${id + 9}]`);
-        let rightTopSelector = $(`.tile[data-id=${id - 7}]`);
-        let leftTopSelector = $(`.tile[data-id=${id - 9}]`);
-        let leftBottomSelector = $(`.tile[data-id=${id + 7}]`);
-
-        if (bottomSelector.find(opponentDiscClass).length){
-            for (let i = 8; i < 64; i++) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(bottomSelector, opponentDiscClass);
-                    return;
-                }
-            }
-
-            return;
-        }
-        else if (topSelector.find(opponentDiscClass).length) {
-            for (let i = 8; i > 64; i--) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(topSelector, opponentDiscClass);
-                    return;
-                }
-            }
-            return;
-        }
-        else if (rightSelector.find(opponentDiscClass).length) {
-            for (let i = 0; i < 9; i++) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(rightSelector, opponentDiscClass);
-                    return;
-                }
-            }
-            return;
-        }
-        else if (leftSelector.find(opponentDiscClass).length) {
-            for (let i = 8; i > 0; i--) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(leftSelector, opponentDiscClass);
-                    return;
-                }
-            }
-            return;
-        }
-
-        else if (rightBottomSelector.find(opponentDiscClass).length){
-            for (let i = 9; i < 64; i++) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(rightBottomSelector, opponentDiscClass);
-                    return;
-                }
-            }
-            return;
-        }
-        else if (rightTopSelector.find(opponentDiscClass).length) {
-            for (let i = 8; i < 64; i++) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(rightTopSelector, opponentDiscClass);
-                    return;
-                }
-            }
-            return;
-        }
-        else if (leftTopSelector.find(opponentDiscClass).length) {
-            for (let i = 8; i < 64; i++) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(leftTopSelector, opponentDiscClass);
-                    return;
-                }
-            }
-            return;
-        }
-        else if (leftBottomSelector.find(opponentDiscClass).length) {
-            for (let i = 8; i < 64; i++) {
-                if ($(`.tile[data-id=${i}]`).find('.' + hasTurn + '-disc').length) {
-                    replaceOpponentDisc(leftBottomSelector, opponentDiscClass);
-                    return;
-                }
-            }
-            return;
-        }
     }
 
     function replaceOpponentDisc(selector, opponentDiscClass) {
