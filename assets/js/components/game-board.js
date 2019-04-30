@@ -1,28 +1,8 @@
 SPA.gameBoard = (function() {
+    let fields = [];
     let hasTurn;
 
     function init() {
-        for(let i = 1; i < 65; i++) {
-            let gridItem = document.createElement('div');
-            gridItem.setAttribute('class', 'grid-item');
-            gridItem.setAttribute('id', i.toString());
-
-            document.getElementById('grid-container').appendChild(gridItem);
-
-            if (i === 28 || i === 37) {
-                let whiteDisc = document.createElement('div');
-                whiteDisc.setAttribute('class', 'white-disc');
-                $(whiteDisc).appendTo(gridItem);
-            }
-            else if (i === 29 || i === 36) {
-                let blackDisc = document.createElement('div');
-                blackDisc.setAttribute('class', 'black-disc');
-                $(blackDisc).appendTo(gridItem);
-            }
-        }
-
-        hasTurn = Disc.black;
-
         fields = [null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null,
@@ -32,7 +12,60 @@ SPA.gameBoard = (function() {
             null, null, null, null, null, null, null, null,
             null, null, null, null, null, null, null, null]; // Krijg ik straks van de server
 
+        drawGameBoard();
+
+        hasTurn = Disc.black;
+
         updateGameBoard();
+    }
+
+    function drawGameBoard() {
+        // let row = 1;
+        // let field = 1;
+        // for(let i = 0; i < fields.length; i++) {
+        //     let rowEl;
+        //     if (i % 9 === 0) {
+        //         rowEl = document.createElement('div');
+        //         rowEl.setAttribute('class', 'row-' + row);
+        //
+        //         document.getElementById('grid-container').appendChild(rowEl);
+        //
+        //         for(let x = 1; x < 9; x++) {
+        //             let gridItem = document.createElement('div');
+        //             gridItem.setAttribute('class', 'grid-item');
+        //             gridItem.setAttribute('id', field.toString());
+        //             $(gridItem).appendTo(rowEl);
+        //
+        //             field++;
+        //         }
+        //
+        //         row++;
+        //     }
+        // }
+
+        var rows = 8;
+        var cols = 8;
+        var size = 64;
+        let gridContainer = "#grid-container";
+
+        $(gridContainer).css({
+            width: size*rows+'px',
+            height: size*cols+'px'
+        });
+
+        for(var i = 0; i < rows*cols; i++){
+            $(gridContainer).append('<div class="tile" data-id="'+(i+1)+'" style="width: '+size+'px; height: '+size+'px"></div>');
+        }
+
+        let whiteDisc = document.createElement('div');
+        whiteDisc.setAttribute('class', 'white-disc');
+
+        let blackDisc = document.createElement('div');
+        blackDisc.setAttribute('class', 'black-disc');
+
+
+        $(whiteDisc).appendTo('.tile[data-id="28"], .tile[data-id="37"]');
+        $(blackDisc).appendTo('.tile[data-id="29"], .tile[data-id="36"]');
     }
 
     function updateGameBoard() {
@@ -51,14 +84,13 @@ SPA.gameBoard = (function() {
         }
     }
 
-    let fields = [];
-
     function getDiscLocations(color) {
         let discLocations = [];
         let className = '.' + color + '-disc';
 
         $(className).each(function(i, obj) {
             discLocations.push(parseInt($(obj).parent().attr('id')));
+            discLocations.push(parseInt($(obj).parent().attr('data-id')));
         });
 
         return discLocations;
@@ -78,15 +110,15 @@ SPA.gameBoard = (function() {
                 if ($.inArray(opponentDiscLocation, opponentDiscLocations) !== -1)
                 {
                     let availableField = operators[op[x]](opponentDiscLocation, i).toString(); //Misschien checken: is er links van de witte steen NOG een witte steen?
-                    $('#' + availableField).addClass('available');
+                    $('.tile[data-id="'+availableField+'"]').addClass('available');
                 }
             }
         }
     }
 
     $("#grid-container").click(function(e) {
-        let clickedFieldId = $(e.target).closest('.available').attr('id').toString();
-        $('#' + clickedFieldId).removeClass('available');
+        let clickedFieldId = $(e.target).closest('.available').attr('data-id').toString();
+        $('.tile[data-id="'+clickedFieldId+'"]').removeClass('available');
 
         addNewDisc(clickedFieldId);
         changeTurn(hasTurn);
@@ -100,39 +132,27 @@ SPA.gameBoard = (function() {
         let newDisc = document.createElement('div');
         newDisc.setAttribute('class', className);
 
-        document.getElementById(clickedFieldId).appendChild(newDisc);
+        $('.tile[data-id="'+clickedFieldId+'"]').appendChild(newDisc);
+        checkAdjacentPossibilities(clickedFieldId);
+        // -9 is altijd schuin boven het item
+        // +9 is altijd schuin onder het item
+        // -1 is ernaast, -1 + -1 is twee ernaast. Snap je me nog? Ja
+    }
+    let rows = 8;
+    function checkAdjacentPossibilities(id){
+        $('#'+(id-rows)).css('background', 'red');
+        (id-1) % rows === 0 || $('#'+(id-1)).css('background', 'red');
 
+        $('#'+(id+1)).css('background', 'red');
+        $('#'+(id+rows)).css('background', 'red');
 
+        let left = (id - rows);
+        let right = (id + rows);
+        let top = (id + 1);
+        let bottom = (id + rows);
 
-        let operators = {
-            '+': function(first, second) { return first + second },
-            '-': function(first, second) { return first - second },
-        };
-
-        let op = ['+', '-'];
-        let opponentDiscLocations = getDiscLocations(Disc.white);
-        let myDiscLocations = getDiscLocations(Disc.black);
-
-        opponentDiscLocations.forEach(function(opponentDiscLocation, i) {
-
-                for (let x = 0; x < op.length; x++) {
-
-                    if (operators[op[x]](myDiscLocations[i], i) === opponentDiscLocation) {
-                        //Misschien checken: is er links van de witte steen NOG een witte steen?
-                        let newDisc = document.createElement('div');
-                        newDisc.setAttribute('class', className);
-
-                        let newDiscId = operators[op[x]](myDiscLocations[i], i).toString();
-
-                        while (document.getElementById(newDiscId).hasChildNodes()) {
-                            document.getElementById(newDiscId).removeChild(document.getElementById(newDiscId).lastChild);
-                        }
-
-                        document.getElementById(newDiscId).appendChild(newDisc);
-                    }
-                }
-
-        });
+        console.log(id);
+        //if ()
     }
 
     function changeTurn(color) {

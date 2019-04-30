@@ -3,14 +3,14 @@
   grid-template-columns: repeat(8, 1fr);
   background-color: #8c5c29;
   padding: 10px;
-  width: 385px;
+  width: 100%;
   margin: 0 auto;
 }
 
-.grid-item {
+.tile {
   background-color: rgba(9, 154, 0, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.8);
-  width: 96%;
+  width: 50%;
   height: 50px;
 }
 
