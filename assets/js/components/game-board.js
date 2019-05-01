@@ -1,6 +1,8 @@
 SPA.gameBoard = (function() {
     let fields = [];
     let hasTurn;
+    let rows = 8;
+    let columns = 8;
 
     function init() {
         fields = [
@@ -14,14 +16,15 @@ SPA.gameBoard = (function() {
             [null, null, null, null, null, null, null, null],
         ];
 
-        drawGameBoard();
-
         hasTurn = Disc.black;
+
+        drawGameBoard();
+        calculatePossibleMoves();
     }
 
     function drawGameBoard() {
-        for (let row = 0; row < fields.length; row++) {
-            for (let column = 0; column < fields.length; column++) {
+        for (let row = 0; row < rows; row++) {
+            for (let column = 0; column < columns; column++) {
                 let tile = document.createElement('div');
 
                 tile.setAttribute('class', 'tile');
@@ -30,11 +33,11 @@ SPA.gameBoard = (function() {
 
                 $(tile).appendTo('#grid-container');
 
-                if (fields[row][column] === 'white') {
-                    $(createDisc('white')).appendTo(tile);
+                if (fields[row][column] === Disc.white) {
+                    $(createDisc(Disc.white)).appendTo(tile);
                 }
-                else if (fields[row][column] === 'black') {
-                    $(createDisc('black')).appendTo(tile);
+                else if (fields[row][column] === Disc.black) {
+                    $(createDisc(Disc.black)).appendTo(tile);
                 }
             }
         }
@@ -49,46 +52,71 @@ SPA.gameBoard = (function() {
         return disc;
     }
 
-    function getDiscLocations(color) {
-        let discLocations = [];
-        let className = '.' + color + '-disc';
+    function calculatePossibleMoves() {
+        let opponent = getOpponentDisc();
+        for (let row = 0; row < rows; row++) {
+            for (let column = 0; column < columns; column++) {
 
-        $(className).each(function(i, obj) {
-            discLocations.push(parseInt($(obj).parent().attr('id')));
-            discLocations.push(parseInt($(obj).parent().attr('data-id')));
-        });
+                if (fields[row][column] === opponent) {
+                    if (fields[row][column + 1] === hasTurn) {
+                        checkLeft(row, column);
+                    }
+                    if (fields[row][column - 1] === hasTurn) {
+                        checkRight(row, column);
+                    }
+                    if (fields[row + 1][column] === hasTurn) {
+                        checkAbove(row, column);
+                    }
+                    if (fields[row - 1][column] === hasTurn) {
+                        checkBelow(row, column);
+                    }
 
-        return discLocations;
-    }
-
-    function calculatePossibleMoves(opponentDiscLocations, myDiscLocation) {
-        // let operators = {
-        //     '+': function(first, second) { return first + second },
-        //     '-': function(first, second) { return first - second },
-        // };
-        //
-        // let op = ['+', '-'];
-
-
-        // for (let i = 1; i < fields.length; i++) {
-        //     for (let x = 0; x < op.length; x++) {
-        //         let opponentDiscLocation = operators[op[x]](myDiscLocation, i);
-        //         if ($.inArray(opponentDiscLocation, opponentDiscLocations) !== -1)
-        //         {
-        //             let availableField = operators[op[x]](opponentDiscLocation, i).toString(); //Misschien checken: is er links van de witte steen NOG een witte steen?
-        //             $('.tile[data-id="'+availableField+'"]').addClass('available');
-        //         }
-        //     }
-        // }
-    }
-
-    function canPutDiscOnTile() {
-
-
-        for (let i = 0; i < grid2D.length; i++) {
-            for (let x = 0; x < grid2D[i].length; x++) {
-                console.log(grid2D[i][x]);
+                }
             }
+        }
+    }
+
+    function checkLeft(row, column) {
+        let iteration = 1; //can this better?
+        for (let i = column; i > -1; i--) { // ga rechts tot 0
+            if (fields[row][column - iteration] === null) {
+                $('div[data-row="' + row + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function checkRight(row, column) {
+        let iteration = 1; //can this better?
+        for (let i = column; i < 8; i++) { // ga rechts tot 0
+            if (fields[row][column + iteration] === null) {
+                $('div[data-row="' + row + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function checkAbove(row, column) {
+        let iteration = 1; //can this better?
+        for (let i = row; i > -1; i--) { // ga rechts tot 0
+            if (fields[row - iteration][column] === null) {
+                $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function checkBelow(row, column) {
+        let iteration = 1; //can this better?
+        for (let i = row; i < 8; i++) { // ga rechts tot 0
+            if (fields[row + iteration][column] === null) {
+                $('div[data-row="' + (row  + iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
+                return;
+            }
+            iteration++;
         }
     }
 
@@ -99,16 +127,13 @@ SPA.gameBoard = (function() {
         addNewDisc(clickedFieldId);
         changeTurn(hasTurn);
 
-        updateGameBoard();
+        drawGameBoard();
     });
 
     function addNewDisc(clickedFieldId) { // change name maybe?
         let newDisc = createDisc(hasTurn);
 
         $('.tile[data-id="'+clickedFieldId+'"]').append(newDisc);
-        // -9 is altijd schuin boven het item
-        // +9 is altijd schuin onder het item
-        // -1 is ernaast, -1 + -1 is twee ernaast. Snap je me nog? Ja
     }
 
     function replaceOpponentDisc(selector, opponentDiscClass) {
@@ -117,7 +142,7 @@ SPA.gameBoard = (function() {
         selector.append(newDisc);
     }
 
-    function opponentDisc() {
+    function getOpponentDisc() {
         if (hasTurn === Disc.white) {
             return Disc.black;
         }
