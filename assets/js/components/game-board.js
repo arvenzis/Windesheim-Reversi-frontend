@@ -3,6 +3,7 @@ SPA.gameBoard = (function() {
     let hasTurn;
     let rows = 8;
     let columns = 8;
+    let gridContainer = '#grid-container';
 
     function init() {
         fields = [
@@ -19,10 +20,10 @@ SPA.gameBoard = (function() {
         hasTurn = Disc.black;
 
         drawGameBoard();
-        calculatePossibleMoves();
     }
 
     function drawGameBoard() {
+        $(gridContainer).empty(); // make sure the grid-container is redrawn
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
                 let tile = document.createElement('div');
@@ -41,6 +42,7 @@ SPA.gameBoard = (function() {
                 }
             }
         }
+        calculatePossibleMoves();
     }
 
     function createDisc(color) {
@@ -76,9 +78,10 @@ SPA.gameBoard = (function() {
         }
     }
 
+    /** Kan dit niet beter? **/
     function checkLeft(row, column) {
-        let iteration = 1; //can this better?
-        for (let i = column; i > -1; i--) { // ga rechts tot 0
+        let iteration = 1;
+        for (let i = column; i > -1; i--) {
             if (fields[row][column - iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
@@ -88,8 +91,8 @@ SPA.gameBoard = (function() {
     }
 
     function checkRight(row, column) {
-        let iteration = 1; //can this better?
-        for (let i = column; i < 8; i++) { // ga rechts tot 0
+        let iteration = 1;
+        for (let i = column; i < 8; i++) {
             if (fields[row][column + iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
@@ -99,8 +102,8 @@ SPA.gameBoard = (function() {
     }
 
     function checkAbove(row, column) {
-        let iteration = 1; //can this better?
-        for (let i = row; i > -1; i--) { // ga rechts tot 0
+        let iteration = 1;
+        for (let i = row; i > -1; i--) {
             if (fields[row - iteration][column] === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
@@ -110,8 +113,8 @@ SPA.gameBoard = (function() {
     }
 
     function checkBelow(row, column) {
-        let iteration = 1; //can this better?
-        for (let i = row; i < 8; i++) { // ga rechts tot 0
+        let iteration = 1;
+        for (let i = row; i < 8; i++) {
             if (fields[row + iteration][column] === null) {
                 $('div[data-row="' + (row  + iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
@@ -120,27 +123,21 @@ SPA.gameBoard = (function() {
         }
     }
 
-    $("#grid-container").click(function(e) {
-        let clickedFieldId = $(e.target).closest('.available').attr('data-id').toString();
-        $('.tile[data-id="'+clickedFieldId+'"]').removeClass('available');
+    $(gridContainer).click(function(e) {
+            console.log(fields);
+            let clickedRow = $(e.target).closest('.available').attr('data-row');
+            let clickedColumn = $(e.target).closest('.available').attr('data-column');
 
-        addNewDisc(clickedFieldId);
-        changeTurn(hasTurn);
+            for (let row = 0; row < rows; row++) {
+                for (let column = 0; column < columns; column++) {
+                    fields[clickedRow][clickedColumn] = hasTurn;
+                    // Vervang tegenstandig
+                }
+            }
 
-        drawGameBoard();
+            changeTurn(hasTurn);
+            drawGameBoard();
     });
-
-    function addNewDisc(clickedFieldId) { // change name maybe?
-        let newDisc = createDisc(hasTurn);
-
-        $('.tile[data-id="'+clickedFieldId+'"]').append(newDisc);
-    }
-
-    function replaceOpponentDisc(selector, opponentDiscClass) {
-        selector.find(opponentDiscClass).remove();
-        let newDisc = createDisc(hasTurn);
-        selector.append(newDisc);
-    }
 
     function getOpponentDisc() {
         if (hasTurn === Disc.white) {
