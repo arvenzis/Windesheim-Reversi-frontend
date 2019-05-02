@@ -6,18 +6,29 @@ SPA.gameBoard = (function() {
     let gridContainer = '#grid-container';
 
     function init() {
+        // fields = [
+        //     [null, null, null, null, null, null, null, null],
+        //     [null, null, null, null, null, null, null, null],
+        //     [null, null, null, null, null, null, null, null],
+        //     [null, null, null, Disc.white, Disc.black, null, null, null],
+        //     [null, null, null, Disc.black, Disc.white, null, null, null],
+        //     [null, null, null, null, null, null, null, null],
+        //     [null, null, null, null, null, null, null, null],
+        //     [null, null, null, null, null, null, null, null],
+        // ];
+
         fields = [
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
-            [null, null, null, Disc.white, Disc.black, null, null, null],
+            [null, null, Disc.black, Disc.black, Disc.black, null, null, null],
             [null, null, null, Disc.black, Disc.white, null, null, null],
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
         ];
 
-        hasTurn = Disc.black;
+        hasTurn = Disc.white;
 
         drawGameBoard();
     }
@@ -124,20 +135,78 @@ SPA.gameBoard = (function() {
     }
 
     $(gridContainer).click(function(e) {
-            console.log(fields);
             let clickedRow = $(e.target).closest('.available').attr('data-row');
             let clickedColumn = $(e.target).closest('.available').attr('data-column');
 
-            for (let row = 0; row < rows; row++) {
-                for (let column = 0; column < columns; column++) {
-                    fields[clickedRow][clickedColumn] = hasTurn;
-                    // Vervang tegenstandig
-                }
-            }
-
+            let opponent = getOpponentDisc();
+            replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            console.log(fields);
             changeTurn(hasTurn);
             drawGameBoard();
     });
+
+    function replaceOpponentRight(row, column, opponent) {
+        let iteration = 1;
+
+        for (let i = column; i < 8; i++) {
+            if (fields[row][column + iteration] === opponent) {
+                fields[row][column + iteration] = hasTurn;
+                return;
+            }
+            else if(fields[row][column + iteration] === hasTurn || fields[row][column + iteration] === null) {
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function replaceOpponentLeft(row, column, opponent) {
+        let iteration = 1;
+
+        for (let i = column; i > -1; i--) {
+            if (fields[row][column - iteration] === opponent) {
+                fields[row][column - iteration] = hasTurn;
+                return;
+            }
+            else if(fields[row][column - iteration] === hasTurn || fields[row][column - iteration] === null) {
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function replaceOpponentAbove(row, column, opponent) {
+        let iteration = 1;
+
+        for (let i = column; i > -1; i--) {
+            if (fields[row - iteration][column] === opponent) {
+                fields[row - iteration][column] = hasTurn;
+                return;
+            }
+            else if(fields[row - iteration][column] === hasTurn || fields[row - iteration][column] === null) {
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function replaceOpponentBelow(row, column, opponent) {
+        let iteration = 1;
+
+        for (let i = column; i < 8; i++) {
+            if (fields[row + iteration][column] === opponent) {
+                fields[row + iteration][column] = hasTurn;
+                return;
+            }
+            else if(fields[row + iteration][column] === hasTurn || fields[row + iteration][column] === null) {
+                return;
+            }
+            iteration++;
+        }
+    }
 
     function getOpponentDisc() {
         if (hasTurn === Disc.white) {
