@@ -6,27 +6,27 @@ SPA.gameBoard = (function() {
     let gridContainer = '#grid-container';
 
     function init() {
+        fields = [
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, Disc.black, null, null, null],
+            [null, null, Disc.black, Disc.black, Disc.black, null, null, null],
+            [null, null, Disc.white, Disc.black, Disc.white, null, null, null],
+            [null, null, null, Disc.black, null, null, null, null],
+            [null, null, null, Disc.white, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+        ];
+
         // fields = [
         //     [null, null, null, null, null, null, null, null],
         //     [null, null, null, null, null, null, null, null],
         //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, Disc.white, Disc.black, null, null, null],
+        //     [null, null, Disc.black, Disc.black, Disc.black, null, null, null],
         //     [null, null, null, Disc.black, Disc.white, null, null, null],
         //     [null, null, null, null, null, null, null, null],
         //     [null, null, null, null, null, null, null, null],
         //     [null, null, null, null, null, null, null, null],
         // ];
-
-        fields = [
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, Disc.black, Disc.black, Disc.black, null, null, null],
-            [null, null, null, Disc.black, Disc.white, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-        ];
 
         hasTurn = Disc.white;
 
@@ -83,7 +83,18 @@ SPA.gameBoard = (function() {
                     if (fields[row - 1][column] === hasTurn) {
                         checkBelow(row, column);
                     }
-
+                    if (fields[row + 1][column + 1] === hasTurn) {
+                        checkLeftAbove(row, column);
+                    }
+                    if (fields[row + 1][column - 1] === hasTurn) {
+                        checkRightAbove(row, column);
+                    }
+                    if (fields[row - 1][column + 1] === hasTurn) {
+                        checkLeftBelow(row, column);
+                    }
+                    if (fields[row - 1][column - 1] === hasTurn) {
+                        checkRightBelow(row, column);
+                    }
                 }
             }
         }
@@ -96,6 +107,8 @@ SPA.gameBoard = (function() {
             if (fields[row][column - iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
+            } else if (fields[row][column - iteration] === hasTurn) {
+                return;
             }
             iteration++;
         }
@@ -106,6 +119,8 @@ SPA.gameBoard = (function() {
         for (let i = column; i < 8; i++) {
             if (fields[row][column + iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
+                return;
+            } else if (fields[row][column + iteration] === hasTurn) {
                 return;
             }
             iteration++;
@@ -118,6 +133,8 @@ SPA.gameBoard = (function() {
             if (fields[row - iteration][column] === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
+            } else if (fields[row - iteration][column] === hasTurn) {
+                return;
             }
             iteration++;
         }
@@ -129,6 +146,64 @@ SPA.gameBoard = (function() {
             if (fields[row + iteration][column] === null) {
                 $('div[data-row="' + (row  + iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
+            } else if (fields[row + iteration][column] === hasTurn) {
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function checkLeftAbove(row, column) {
+        let iteration = 1;
+        for (let i = row; i > -1; i--) {
+            let field = fields[row - iteration][column - iteration];
+            if (field === null) {
+                $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
+                return;
+            } else if (field === hasTurn) {
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function checkRightAbove(row, column) {
+        let iteration = 1;
+        for (let i = row; i < 8; i--) {
+            let field = fields[row - iteration][column + iteration];
+            if (field === null) {
+                $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
+                return;
+            } else if (field === hasTurn) {
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function checkLeftBelow(row, column) {
+        let iteration = 1;
+        for (let i = row; i > -1; i--) {
+            let field = fields[row + iteration][column - iteration];
+            if (field === null) {
+                $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
+                return;
+            } else if (field === hasTurn) {
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function checkRightBelow(row, column) {
+        let iteration = 1;
+        for (let i = row; i < 8; i--) {
+            let field = fields[row + iteration][column + iteration];
+            if (field === null) {
+                $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
+                return;
+            } else if (field === hasTurn) {
+                return;
             }
             iteration++;
         }
@@ -138,14 +213,16 @@ SPA.gameBoard = (function() {
             let clickedRow = $(e.target).closest('.available').attr('data-row');
             let clickedColumn = $(e.target).closest('.available').attr('data-column');
 
-            let opponent = getOpponentDisc();
-            replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-            replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-            replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-            replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-            console.log(fields);
-            changeTurn(hasTurn);
-            drawGameBoard();
+            if (clickedRow !== undefined || clickedColumn !== undefined) {
+                let opponent = getOpponentDisc();
+                replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+                replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+                replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+                replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+
+                changeTurn(hasTurn);
+                drawGameBoard();
+            }
     });
 
     function replaceOpponentRight(row, column, opponent) {
