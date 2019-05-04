@@ -13,8 +13,8 @@ SPA.data = (function() {
         if (configMap.environment === "production") {
             $.ajax({
                 url: uri + configMap.endpoints + id,
-                success: function(data) {
-                    console.log(`Here's the game you asked for: ${data}`)
+                success: function(gameData) {
+                    SPA.gameBoard.init(JSON.parse(gameData.gameBoard));
                 },
                 error: function() {
                     throw new Error("Failed to retrieve games");

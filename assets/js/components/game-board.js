@@ -1,36 +1,14 @@
 SPA.gameBoard = (function() {
-    let fields = [];
+    let _gameBoard = [];
     let hasTurn;
     let rows = 8;
     let columns = 8;
     let gridContainer = '#grid-container';
 
-    function init() {
-        fields = [
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, Disc.black, null, null, null],
-            [null, null, Disc.black, Disc.black, Disc.black, null, null, null],
-            [null, null, Disc.white, Disc.black, Disc.white, null, null, null],
-            [null, null, null, Disc.black, null, null, null, null],
-            [null, null, null, Disc.white, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-        ];
+    function init(gameBoard) {
+        _gameBoard = gameBoard;
 
-
-        // fields = [
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, Disc.black, Disc.black, Disc.black, null, null, null],
-        //     [null, null, null, Disc.black, Disc.white, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        // ];
-
-        hasTurn = Disc.white;
-
+        hasTurn = Disc.white; // @ToDo: Do this via the database
         drawGameBoard();
     }
 
@@ -46,10 +24,10 @@ SPA.gameBoard = (function() {
 
                 $(tile).appendTo('#grid-container');
 
-                if (fields[row][column] === Disc.white) {
+                if (_gameBoard[row][column] === Disc.white) {
                     $(createDisc(Disc.white)).appendTo(tile);
                 }
-                else if (fields[row][column] === Disc.black) {
+                else if (_gameBoard[row][column] === Disc.black) {
                     $(createDisc(Disc.black)).appendTo(tile);
                 }
             }
@@ -71,29 +49,29 @@ SPA.gameBoard = (function() {
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
 
-                if (fields[row][column] === opponent) {
-                    if (fields[row][column + 1] === hasTurn) {
+                if (_gameBoard[row][column] === opponent) {
+                    if (_gameBoard[row][column + 1] === hasTurn) {
                         checkLeft(row, column);
                     }
-                    if (fields[row][column - 1] === hasTurn) {
+                    if (_gameBoard[row][column - 1] === hasTurn) {
                         checkRight(row, column);
                     }
-                    if (fields[row + 1][column] === hasTurn) {
+                    if (_gameBoard[row + 1][column] === hasTurn) {
                         checkAbove(row, column);
                     }
-                    if (fields[row - 1][column] === hasTurn) {
+                    if (_gameBoard[row - 1][column] === hasTurn) {
                         checkBelow(row, column);
                     }
-                    if (fields[row + 1][column + 1] === hasTurn) {
+                    if (_gameBoard[row + 1][column + 1] === hasTurn) {
                         checkLeftAbove(row, column);
                     }
-                    if (fields[row + 1][column - 1] === hasTurn) {
+                    if (_gameBoard[row + 1][column - 1] === hasTurn) {
                         checkRightAbove(row, column);
                     }
-                    if (fields[row - 1][column + 1] === hasTurn) {
+                    if (_gameBoard[row - 1][column + 1] === hasTurn) {
                         checkLeftBelow(row, column);
                     }
-                    if (fields[row - 1][column - 1] === hasTurn) {
+                    if (_gameBoard[row - 1][column - 1] === hasTurn) {
                         checkRightBelow(row, column);
                     }
                 }
@@ -105,10 +83,10 @@ SPA.gameBoard = (function() {
     function checkLeft(row, column) {
         let iteration = 1;
         for (let i = column; i > -1; i--) {
-            if (fields[row][column - iteration] === null) {
+            if (_gameBoard[row][column - iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
-            } else if (fields[row][column - iteration] === hasTurn) {
+            } else if (_gameBoard[row][column - iteration] === hasTurn) {
                 return;
             }
             iteration++;
@@ -118,10 +96,10 @@ SPA.gameBoard = (function() {
     function checkRight(row, column) {
         let iteration = 1;
         for (let i = column; i < 8; i++) {
-            if (fields[row][column + iteration] === null) {
+            if (_gameBoard[row][column + iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
-            } else if (fields[row][column + iteration] === hasTurn) {
+            } else if (_gameBoard[row][column + iteration] === hasTurn) {
                 return;
             }
             iteration++;
@@ -131,10 +109,10 @@ SPA.gameBoard = (function() {
     function checkAbove(row, column) {
         let iteration = 1;
         for (let i = row; i > -1; i--) {
-            if (fields[row - iteration][column] === null) {
+            if (_gameBoard[row - iteration][column] === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
-            } else if (fields[row - iteration][column] === hasTurn) {
+            } else if (_gameBoard[row - iteration][column] === hasTurn) {
                 return;
             }
             iteration++;
@@ -144,10 +122,10 @@ SPA.gameBoard = (function() {
     function checkBelow(row, column) {
         let iteration = 1;
         for (let i = row; i < 8; i++) {
-            if (fields[row + iteration][column] === null) {
+            if (_gameBoard[row + iteration][column] === null) {
                 $('div[data-row="' + (row  + iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
-            } else if (fields[row + iteration][column] === hasTurn) {
+            } else if (_gameBoard[row + iteration][column] === hasTurn) {
                 return;
             }
             iteration++;
@@ -157,7 +135,7 @@ SPA.gameBoard = (function() {
     function checkLeftAbove(row, column) {
         let iteration = 1;
         for (let i = row; i > -1; i--) {
-            let field = fields[row - iteration][column - iteration];
+            let field = _gameBoard[row - iteration][column - iteration];
             if (field === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
@@ -171,7 +149,7 @@ SPA.gameBoard = (function() {
     function checkRightAbove(row, column) {
         let iteration = 1;
         for (let i = row; i < 8; i--) {
-            let field = fields[row - iteration][column + iteration];
+            let field = _gameBoard[row - iteration][column + iteration];
             if (field === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
@@ -185,7 +163,7 @@ SPA.gameBoard = (function() {
     function checkLeftBelow(row, column) {
         let iteration = 1;
         for (let i = row; i > -1; i--) {
-            let field = fields[row + iteration][column - iteration];
+            let field = _gameBoard[row + iteration][column - iteration];
             if (field === null) {
                 $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
@@ -199,7 +177,7 @@ SPA.gameBoard = (function() {
     function checkRightBelow(row, column) {
         let iteration = 1;
         for (let i = row; i < 8; i--) {
-            let field = fields[row + iteration][column + iteration];
+            let field = _gameBoard[row + iteration][column + iteration];
             if (field === null) {
                 $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
@@ -230,11 +208,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i < 8; i++) {
-            if (fields[row][column + iteration] === opponent) {
-                fields[row][column + iteration] = hasTurn;
+            if (_gameBoard[row][column + iteration] === opponent) {
+                _gameBoard[row][column + iteration] = hasTurn;
                 return;
             }
-            else if(fields[row][column + iteration] === hasTurn || fields[row][column + iteration] === null) {
+            else if(_gameBoard[row][column + iteration] === hasTurn || _gameBoard[row][column + iteration] === null) {
                 return;
             }
             iteration++;
@@ -245,11 +223,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i > -1; i--) {
-            if (fields[row][column - iteration] === opponent) {
-                fields[row][column - iteration] = hasTurn;
+            if (_gameBoard[row][column - iteration] === opponent) {
+                _gameBoard[row][column - iteration] = hasTurn;
                 return;
             }
-            else if(fields[row][column - iteration] === hasTurn || fields[row][column - iteration] === null) {
+            else if(_gameBoard[row][column - iteration] === hasTurn || _gameBoard[row][column - iteration] === null) {
                 return;
             }
             iteration++;
@@ -260,11 +238,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i > -1; i--) {
-            if (fields[row - iteration][column] === opponent) {
-                fields[row - iteration][column] = hasTurn;
+            if (_gameBoard[row - iteration][column] === opponent) {
+                _gameBoard[row - iteration][column] = hasTurn;
                 return;
             }
-            else if(fields[row - iteration][column] === hasTurn || fields[row - iteration][column] === null) {
+            else if(_gameBoard[row - iteration][column] === hasTurn || _gameBoard[row - iteration][column] === null) {
                 return;
             }
             iteration++;
@@ -275,11 +253,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i < 8; i++) {
-            if (fields[row + iteration][column] === opponent) {
-                fields[row + iteration][column] = hasTurn;
+            if (_gameBoard[row + iteration][column] === opponent) {
+                _gameBoard[row + iteration][column] = hasTurn;
                 return;
             }
-            else if(fields[row + iteration][column] === hasTurn || fields[row + iteration][column] === null) {
+            else if(_gameBoard[row + iteration][column] === hasTurn || _gameBoard[row + iteration][column] === null) {
                 return;
             }
             iteration++;
@@ -305,6 +283,6 @@ SPA.gameBoard = (function() {
     }
 
     return {
-        init,
+        init
     }
 }) ();
