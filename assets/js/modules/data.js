@@ -23,10 +23,10 @@ SPA.data = (function() {
         }
     }
 
-    function createGame(playerId, gameBoard) {
+    function createGame(playerOneId, playerTwoId, gameBoard) {
         if (configMap.environment === "production") {
             gameBoard = JSON.stringify(gameBoard);
-            let data = JSON.stringify({"playerId" : playerId, "gameBoard" : gameBoard});
+            let data = JSON.stringify({"playerOneId" : playerOneId, "playerTwoId" : playerTwoId, "gameBoard" : gameBoard});
 
             $.ajax({
                 url: uri + configMap.endpoints,
@@ -44,10 +44,9 @@ SPA.data = (function() {
         }
     }
 
-    function updateGame(id, playerId, gameBoard){
+    function updateGame(id, HasTurn, gameBoard){
         if (configMap.environment === "production") {
-            gameBoard = JSON.stringify(gameBoard);
-            let data = JSON.stringify({"playerId" : playerId, "gameBoard" : gameBoard});
+            let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
 
             $.ajax({
                 url: uri + configMap.endpoints + id,
@@ -62,6 +61,8 @@ SPA.data = (function() {
                     throw new Error(`Failed to update game with id ${id}`);
                 }
             });
+
+            //Update HasTurn of player
         }
     }
 
