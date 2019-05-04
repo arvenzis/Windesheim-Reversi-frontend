@@ -17,6 +17,7 @@ SPA.gameBoard = (function() {
             [null, null, null, null, null, null, null, null],
         ];
 
+
         // fields = [
         //     [null, null, null, null, null, null, null, null],
         //     [null, null, null, null, null, null, null, null],

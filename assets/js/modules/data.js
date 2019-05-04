@@ -1,5 +1,5 @@
 SPA.data = (function() {
-    var configMap;
+    let configMap;
     const uri = "https://localhost:5003/";
 
     function init(env, endpoints){
@@ -13,8 +13,8 @@ SPA.data = (function() {
         if (configMap.environment === "production") {
             $.ajax({
                 url: uri + configMap.endpoints + id,
-                success: function(game) {
-                    console.log(`Here's the game you asked for: ${game}`)
+                success: function(data) {
+                    console.log(`Here's the game you asked for: ${data}`)
                 },
                 error: function() {
                     throw new Error("Failed to retrieve games");
@@ -44,8 +44,25 @@ SPA.data = (function() {
         }
     }
 
-    function updateGame(){
+    function updateGame(id, playerId, gameBoard){
+        if (configMap.environment === "production") {
+            gameBoard = JSON.stringify(gameBoard);
+            let data = JSON.stringify({"playerId" : playerId, "gameBoard" : gameBoard});
 
+            $.ajax({
+                url: uri + configMap.endpoints + id,
+                type: "PUT",
+                async: true,
+                contentType: "application/json",
+                data: data,
+                success: function () {
+                    console.log();
+                },
+                error: function () {
+                    throw new Error(`Failed to update game with id ${id}`);
+                }
+            });
+        }
     }
 
     return {
