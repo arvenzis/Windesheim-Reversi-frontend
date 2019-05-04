@@ -44,7 +44,27 @@ SPA.data = (function() {
         }
     }
 
-    function updateGame(id, HasTurn, gameBoard){
+    function createPlayer(name, hasTurn, discColor) {
+        if (configMap.environment === "production") {
+            let data = JSON.stringify({"name" : name, "hasTurn" : hasTurn, "DiscColor" : discColor});
+
+            $.ajax({
+                url: uri + "api/player",
+                async: true,
+                type: "POST",
+                contentType: "application/json",
+                data: data,
+                success: function() {
+                    console.log('A new player has been created');
+                },
+                error: function() {
+                    throw new Error("Create player gave an error. Please try again.");
+                }
+            });
+        }
+    }
+
+    function updateGame(id, HasTurn, gameBoard) {
         if (configMap.environment === "production") {
             let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
 
@@ -55,7 +75,28 @@ SPA.data = (function() {
                 contentType: "application/json",
                 data: data,
                 success: function () {
-                    console.log();
+                    console.log("I've updated the game board for ya");
+                },
+                error: function () {
+                    throw new Error(`Failed to update game with id ${id}`);
+                }
+            });
+
+            //Update HasTurn of player
+        }
+    }
+
+    function updatePlayer(id, HasTurn) {
+        if (configMap.environment === "production") {
+
+            $.ajax({
+                url: uri + "api/player/" + id, //endpoint configured differently
+                type: "PUT",
+                async: true,
+                contentType: "application/json",
+                data: HasTurn,
+                success: function () {
+                    console.log("I switched the turn of the player for ya");
                 },
                 error: function () {
                     throw new Error(`Failed to update game with id ${id}`);
@@ -70,6 +111,7 @@ SPA.data = (function() {
         init,
         getGame,
         createGame,
+        createPlayer,
         updateGame
     }
 })();
