@@ -8,8 +8,8 @@ SPA.gameBoard = (function() {
     function init(id, gameBoard) {
         gameId = id;
         SPA.data.getPlayers(id);
-        _gameBoard = gameBoard;
         getTurn();
+        _gameBoard = gameBoard;
 
         drawGameBoard();
     }
@@ -30,6 +30,7 @@ SPA.gameBoard = (function() {
     }
 
     function getTurn() {
+        console.log("Kump hierin?");
         _players.forEach(function(player) {
             if (player.hasTurn === true) {
                 hasTurn = player.discColor;

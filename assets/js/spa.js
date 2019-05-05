@@ -20,7 +20,7 @@ var SPA = (function() {
         //SPA.data.createPlayer(1, "Karen", true, Disc.white);
         //SPA.data.createPlayer(1, "Floor", false, Disc.black);
         //SPA.data.updateGame(1, gameBoard);
-       SPA.data.getGame(1);
+        SPA.data.getGame(1);
 
         //SPA.popup.show("Karen", "Is heel aardig", AlertType.success);
     }

@@ -25,13 +25,10 @@ SPA.data = (function() {
 
     function getPlayers(gameId) {
         if (configMap.environment === "production") {
-            $.ajax({
-                //async: false,
+             $.ajax({
+                async: false, // @ToDo: this is deprecated. Use a callback.
                 url: uri + "api/player/" + gameId,
-                success: function(players) {
-                    SPA.gameBoard.storePlayers(players);
-                    SPA.gameBoard.getTurn();
-                },
+                success: SPA.gameBoard.storePlayers,
                 error: function() {
                     throw new Error("Failed to retrieve players");
                 }
@@ -86,11 +83,10 @@ SPA.data = (function() {
             $.ajax({
                 url: uri + configMap.endpoints + id,
                 type: "PUT",
-                async: true,
                 contentType: "application/json",
                 data: data,
                 success: function () {
-                    SPA.gameBoard.setTurn();
+                    SPA.gameBoard.setTurn(); //@Todo: this is buggy
                     SPA.data.getPlayers(id);
                     SPA.data.getGame(id);
                     console.log("I've updated the game board for ya");
