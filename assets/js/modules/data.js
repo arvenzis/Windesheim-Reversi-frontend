@@ -14,7 +14,7 @@ SPA.data = (function() {
             $.ajax({
                 url: uri + configMap.endpoints + id,
                 success: function(gameData) {
-                    SPA.gameBoard.init(JSON.parse(gameData.gameBoard));
+                    SPA.gameBoard.init(gameData.id, JSON.parse(gameData.gameBoard));
                 },
                 error: function() {
                     throw new Error("Failed to retrieve games");
@@ -23,10 +23,24 @@ SPA.data = (function() {
         }
     }
 
-    function createGame(playerOneId, playerTwoId, gameBoard) {
+    function getPlayer(gameId) {
         if (configMap.environment === "production") {
-            gameBoard = JSON.stringify(gameBoard);
-            let data = JSON.stringify({"playerOneId" : playerOneId, "playerTwoId" : playerTwoId, "gameBoard" : gameBoard});
+            $.ajax({
+                url: uri + "api/player/" + gameId,
+                success: function(player) {
+                    //SPA.gameBoard.init(gameData.id, JSON.parse(gameData.gameBoard));
+                    console.log("doar hejjem weh! " + player);
+                },
+                error: function() {
+                    throw new Error("Failed to retrieve players");
+                }
+            });
+        }
+    }
+
+    function createGame(gameBoard) {
+        if (configMap.environment === "production") {
+            let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
 
             $.ajax({
                 url: uri + configMap.endpoints,
@@ -44,9 +58,9 @@ SPA.data = (function() {
         }
     }
 
-    function createPlayer(name, hasTurn, discColor) {
+    function createPlayer(gameId, name, hasTurn, discColor) {
         if (configMap.environment === "production") {
-            let data = JSON.stringify({"name" : name, "hasTurn" : hasTurn, "DiscColor" : discColor});
+            let data = JSON.stringify({"gameId" : gameId, "name" : name, "hasTurn" : hasTurn, "discColor" : discColor});
 
             $.ajax({
                 url: uri + "api/player",
@@ -64,7 +78,7 @@ SPA.data = (function() {
         }
     }
 
-    function updateGame(id, HasTurn, gameBoard) {
+    function updateGame(id, gameBoard) {
         if (configMap.environment === "production") {
             let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
 
@@ -76,6 +90,8 @@ SPA.data = (function() {
                 data: data,
                 success: function () {
                     console.log("I've updated the game board for ya");
+                    //SPA.data.updatePlayerTurn(id, )
+                    SPA.data.getGame(id);
                 },
                 error: function () {
                     throw new Error(`Failed to update game with id ${id}`);
@@ -86,20 +102,22 @@ SPA.data = (function() {
         }
     }
 
-    function updatePlayer(id, HasTurn) {
+    function updatePlayerTurn(gameId, playerId, hasTurn) {
         if (configMap.environment === "production") {
 
+            let data = JSON.stringify({"gameId" : gameId, "hasTurn" : hasTurn});
+
             $.ajax({
-                url: uri + "api/player/" + id, //endpoint configured differently
+                url: uri + "api/player/" + playerId, //@ToDo: configure the endpoint via configMap
                 type: "PUT",
                 async: true,
                 contentType: "application/json",
-                data: HasTurn,
+                data: data,
                 success: function () {
                     console.log("I switched the turn of the player for ya");
                 },
                 error: function () {
-                    throw new Error(`Failed to update game with id ${id}`);
+                    throw new Error(`Failed to update player with id ${playerId}`);
                 }
             });
 
@@ -110,8 +128,10 @@ SPA.data = (function() {
     return {
         init,
         getGame,
+        getPlayer,
         createGame,
         createPlayer,
-        updateGame
+        updateGame,
+        updatePlayerTurn
     }
 })();
