@@ -14,11 +14,13 @@ var SPA = (function() {
         ];
 
         $("body").append("<section id='spa'></section>");
-        //SPA.data.getGame(1);
-        SPA.data.createPlayer("Karen", true, Disc.white);
-        //SPA.data.createGame(1, 2, gameBoard);
-        //SPA.data.updateGame(8, 2, gameBoard);
-        //SPA.data.getGame(1);
+
+
+        //SPA.data.createGame(gameBoard);
+        //SPA.data.createPlayer(1, "Karen", true, Disc.white);
+        //SPA.data.createPlayer(1, "Floor", false, Disc.black);
+        //SPA.data.updateGame(1, gameBoard);
+       SPA.data.getGame(1);
 
         //SPA.popup.show("Karen", "Is heel aardig", AlertType.success);
     }

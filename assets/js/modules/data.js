@@ -23,13 +23,14 @@ SPA.data = (function() {
         }
     }
 
-    function getPlayer(gameId) {
+    function getPlayers(gameId) {
         if (configMap.environment === "production") {
             $.ajax({
+                //async: false,
                 url: uri + "api/player/" + gameId,
-                success: function(player) {
-                    //SPA.gameBoard.init(gameData.id, JSON.parse(gameData.gameBoard));
-                    console.log("doar hejjem weh! " + player);
+                success: function(players) {
+                    SPA.gameBoard.storePlayers(players);
+                    SPA.gameBoard.getTurn();
                 },
                 error: function() {
                     throw new Error("Failed to retrieve players");
@@ -89,16 +90,15 @@ SPA.data = (function() {
                 contentType: "application/json",
                 data: data,
                 success: function () {
-                    console.log("I've updated the game board for ya");
-                    //SPA.data.updatePlayerTurn(id, )
+                    SPA.gameBoard.setTurn();
+                    SPA.data.getPlayers(id);
                     SPA.data.getGame(id);
+                    console.log("I've updated the game board for ya");
                 },
                 error: function () {
                     throw new Error(`Failed to update game with id ${id}`);
                 }
             });
-
-            //Update HasTurn of player
         }
     }
 
@@ -120,15 +120,13 @@ SPA.data = (function() {
                     throw new Error(`Failed to update player with id ${playerId}`);
                 }
             });
-
-            //Update HasTurn of player
         }
     }
 
     return {
         init,
         getGame,
-        getPlayer,
+        getPlayers,
         createGame,
         createPlayer,
         updateGame,

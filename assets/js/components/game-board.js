@@ -1,18 +1,47 @@
 SPA.gameBoard = (function() {
+    let gameId;
     let _gameBoard = [];
+    let _players;
     let hasTurn;
-    let rows = 8;
-    let columns = 8;
     let gridContainer = '#grid-container';
 
-    function init(gameBoard) {
+    function init(id, gameBoard) {
+        gameId = id;
+        SPA.data.getPlayers(id);
         _gameBoard = gameBoard;
+        getTurn();
 
-        hasTurn = Disc.white; // @ToDo: Do this via the database
         drawGameBoard();
     }
 
+    function storePlayers(players) {
+        _players = players;
+    }
+
+    function setTurn() {
+        _players.forEach(function(player) {
+            if (player.hasTurn === true) {
+                SPA.data.updatePlayerTurn(gameId, player.id, false);
+            }
+            else if(player.hasTurn === false) {
+                SPA.data.updatePlayerTurn(gameId, player.id, true);
+            }
+        });
+    }
+
+    function getTurn() {
+        _players.forEach(function(player) {
+            if (player.hasTurn === true) {
+                hasTurn = player.discColor;
+            }
+        });
+    }
+
+    let rows = 8;
+    let columns = 8;
+
     function drawGameBoard() {
+        console.log(hasTurn);
         $(gridContainer).empty(); // make sure the grid-container is redrawn
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
@@ -199,8 +228,7 @@ SPA.gameBoard = (function() {
                 replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
                 replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
 
-                changeTurn(hasTurn);
-                drawGameBoard();
+                SPA.data.updateGame(gameId, _gameBoard);
             }
     });
 
@@ -273,16 +301,10 @@ SPA.gameBoard = (function() {
         }
     }
 
-    function changeTurn(color) {
-        if (color === Disc.white) {
-            hasTurn = Disc.black;
-        }
-        else if (color === Disc.black) {
-            hasTurn = Disc.white;
-        }
-    }
-
     return {
-        init
+        init,
+        storePlayers,
+        setTurn,
+        getTurn
     }
 }) ();
