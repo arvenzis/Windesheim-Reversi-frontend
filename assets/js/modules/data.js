@@ -16,7 +16,9 @@ SPA.data = (function() {
                 error: function() {
                     throw new Error("Failed to retrieve games");
                 }
-            }).done(function(data) { SPA.gameBoard.init(data.id, JSON.parse(data.gameBoard)) });
+            }).done(function(data) {
+                SPA.gameBoard.init(data.id, JSON.parse(data.gameBoard))
+            });
         }
     }
 
@@ -24,11 +26,13 @@ SPA.data = (function() {
         if (configMap.environment === "production") {
              $.ajax({
                 url: uri + "api/player/" + gameId,
-                success: SPA.gameBoard.storePlayers, //@Todo checken wat voor effect het heeft om success en done samen te gebruiken
                 error: function() {
                     throw new Error("Failed to retrieve players");
                 }
-            }).done(SPA.gameBoard.getTurn);
+            }).done(function(data) {
+                 SPA.gameBoard.storePlayers(data);
+                 SPA.gameBoard.getTurn();
+            });
         }
     }
 
@@ -38,13 +42,9 @@ SPA.data = (function() {
 
             $.ajax({
                 url: uri + configMap.endpoints,
-                async: true,
                 type: "POST",
                 contentType: "application/json",
                 data: data,
-                success: function() {
-                    console.log('A new game has been created');
-                },
                 error: function() {
                     throw new Error("Create game gave an error. Please try again.");
                 }
@@ -58,13 +58,9 @@ SPA.data = (function() {
 
             $.ajax({
                 url: uri + "api/player",
-                async: true,
                 type: "POST",
                 contentType: "application/json",
                 data: data,
-                success: function() {
-                    console.log('A new player has been created');
-                },
                 error: function() {
                     throw new Error("Create player gave an error. Please try again.");
                 }
@@ -81,16 +77,12 @@ SPA.data = (function() {
                 type: "PUT",
                 contentType: "application/json",
                 data: data,
-                success: function () {
-                    SPA.gameBoard.setTurn();
-                    console.log("I've updated the game board for ya");
-                },
+                success: SPA.gameBoard.setTurn,
                 error: function () {
                     throw new Error(`Failed to update game with id ${id}`);
                 }
-            }).done(function(data) {
-                SPA.gameBoard.init(data.id, JSON.parse(data.gameBoard));
-                //getGame?
+            }).done(function() {
+               SPA.data.getGame(id);
             });
         }
     }
@@ -103,12 +95,8 @@ SPA.data = (function() {
             $.ajax({
                 url: uri + "api/player/" + playerId, //@ToDo: configure the endpoint via configMap
                 type: "PUT",
-                async: true,
                 contentType: "application/json",
                 data: data,
-                success: function () {
-                    console.log("I switched the turn of the player for ya");
-                },
                 error: function () {
                     throw new Error(`Failed to update player with id ${playerId}`);
                 }

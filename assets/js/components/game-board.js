@@ -7,8 +7,8 @@ SPA.gameBoard = (function() {
 
     function init(id, gameBoard) {
         gameId = id;
-        SPA.data.getPlayers(id);
         _gameBoard = gameBoard;
+        drawGameBoard();
     }
 
     function storePlayers(players) {
@@ -27,13 +27,11 @@ SPA.gameBoard = (function() {
     }
 
     function getTurn() {
-        console.log("Kump hierin?");
         _players.forEach(function(player) {
             if (player.hasTurn === true) {
                 hasTurn = player.discColor;
             }
         });
-        drawGameBoard(); //Que?
     }
 
     let rows = 8;
