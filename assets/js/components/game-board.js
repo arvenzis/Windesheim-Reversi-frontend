@@ -8,10 +8,7 @@ SPA.gameBoard = (function() {
     function init(id, gameBoard) {
         gameId = id;
         SPA.data.getPlayers(id);
-        getTurn();
         _gameBoard = gameBoard;
-
-        drawGameBoard();
     }
 
     function storePlayers(players) {
@@ -36,6 +33,7 @@ SPA.gameBoard = (function() {
                 hasTurn = player.discColor;
             }
         });
+        drawGameBoard(); //Que?
     }
 
     let rows = 8;

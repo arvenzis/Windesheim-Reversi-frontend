@@ -13,26 +13,22 @@ SPA.data = (function() {
         if (configMap.environment === "production") {
             $.ajax({
                 url: uri + configMap.endpoints + id,
-                success: function(gameData) {
-                    SPA.gameBoard.init(gameData.id, JSON.parse(gameData.gameBoard));
-                },
                 error: function() {
                     throw new Error("Failed to retrieve games");
                 }
-            });
+            }).done(function(data) { SPA.gameBoard.init(data.id, JSON.parse(data.gameBoard)) });
         }
     }
 
     function getPlayers(gameId) {
         if (configMap.environment === "production") {
              $.ajax({
-                async: false, // @ToDo: this is deprecated. Use a callback.
                 url: uri + "api/player/" + gameId,
-                success: SPA.gameBoard.storePlayers,
+                success: SPA.gameBoard.storePlayers, //@Todo checken wat voor effect het heeft om success en done samen te gebruiken
                 error: function() {
                     throw new Error("Failed to retrieve players");
                 }
-            });
+            }).done(SPA.gameBoard.getTurn);
         }
     }
 
@@ -86,14 +82,15 @@ SPA.data = (function() {
                 contentType: "application/json",
                 data: data,
                 success: function () {
-                    SPA.gameBoard.setTurn(); //@Todo: this is buggy
-                    SPA.data.getPlayers(id);
-                    SPA.data.getGame(id);
+                    SPA.gameBoard.setTurn();
                     console.log("I've updated the game board for ya");
                 },
                 error: function () {
                     throw new Error(`Failed to update game with id ${id}`);
                 }
+            }).done(function(data) {
+                SPA.gameBoard.init(data.id, JSON.parse(data.gameBoard));
+                //getGame?
             });
         }
     }
