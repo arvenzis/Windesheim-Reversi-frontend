@@ -11,26 +11,22 @@ SPA.gameBoard = (function() {
         drawGameBoard();
     }
 
-    function storePlayers(players) {
-        _players = players;
-    }
-
-    function setTurn() {
-        _players.forEach(function(player) {
-            if (player.hasTurn === true) {
-                SPA.data.updatePlayerTurn(gameId, player.id, false);
-            }
-            else if(player.hasTurn === false) {
-                SPA.data.updatePlayerTurn(gameId, player.id, true);
-            }
+    function storePlayersLocally(players) {
+        return new Promise(function(resolve) {
+            _players = players;
+            resolve(_players);
         });
     }
 
     function getTurn() {
-        _players.forEach(function(player) {
-            if (player.hasTurn === true) {
-                hasTurn = player.discColor;
-            }
+        console.log("get die turn G");
+        return new Promise(function(resolve) {
+            _players.forEach(function (player) {
+                if (player.hasTurn === true) {
+                    hasTurn = player.discColor;
+                    resolve();
+                }
+            });
         });
     }
 
@@ -38,7 +34,7 @@ SPA.gameBoard = (function() {
     let columns = 8;
 
     function drawGameBoard() {
-        console.log(hasTurn);
+        console.log("Draw gameboard. This player has to make a move: " + hasTurn);
         $(gridContainer).empty(); // make sure the grid-container is redrawn
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
@@ -219,13 +215,23 @@ SPA.gameBoard = (function() {
             let clickedColumn = $(e.target).closest('.available').attr('data-column');
 
             if (clickedRow !== undefined || clickedColumn !== undefined) {
+                _gameBoard[clickedRow][clickedColumn] = hasTurn;
                 let opponent = getOpponentDisc();
                 replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
                 replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
                 replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
                 replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
 
-                SPA.data.updateGame(gameId, _gameBoard);
+                SPA.api.updatePlayerTurn(gameId, _players);
+
+                SPA.api.getPlayers(gameId).then(function(players) {
+                    SPA.gameBoard.storePlayersLocally(players);
+                    SPA.api.updateGame(gameId, _gameBoard);
+                    SPA.gameBoard.getTurn();
+                });
+                SPA.api.getGame(gameId).then(function(result) {
+                    SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
+                });
             }
     });
 
@@ -300,8 +306,7 @@ SPA.gameBoard = (function() {
 
     return {
         init,
-        storePlayers,
-        setTurn,
+        storePlayersLocally,
         getTurn
     }
 }) ();

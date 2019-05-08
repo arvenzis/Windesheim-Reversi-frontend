@@ -1,6 +1,6 @@
 var SPA = (function() {
-    function init(){
-        SPA.data.init('production', 'api/game/');
+    function init() {
+        SPA.api.init('production', 'api/game/');
 
         let gameBoard = [
             [null, null, null, null, null, null, null, null],
@@ -20,19 +20,16 @@ var SPA = (function() {
         //SPA.data.createPlayer(1, "Karen", true, Disc.white);
         //SPA.data.createPlayer(1, "Floor", false, Disc.black);
         let gameId = 1;
-        SPA.data.getPlayers(gameId);
-        SPA.data.updateGame(gameId, gameBoard);
-        SPA.data.getGame(gameId);
+        SPA.api.getPlayers(gameId).then(function(players) {
+             SPA.gameBoard.storePlayersLocally(players);
+            SPA.api.updateGame(gameId, gameBoard);
+            SPA.gameBoard.getTurn();
+        });
+        SPA.api.getGame(gameId).then(function(result) {
+            SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
+        });
 
         //SPA.popup.show("Karen", "Is heel aardig", AlertType.success);
-    }
-
-    function Model() {
-
-    }
-
-    function Reversi() {
-
     }
 
     return {
