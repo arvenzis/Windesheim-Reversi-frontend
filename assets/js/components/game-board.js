@@ -19,15 +19,12 @@ SPA.gameBoard = (function() {
     }
 
     function getTurn() {
-        console.log("get die turn G");
-        return new Promise(function(resolve) {
             _players.forEach(function (player) {
+                console.log(player.name + " " + player.hasTurn);
                 if (player.hasTurn === true) {
                     hasTurn = player.discColor;
-                    resolve();
                 }
             });
-        });
     }
 
     let rows = 8;
@@ -65,6 +62,32 @@ SPA.gameBoard = (function() {
 
         return disc;
     }
+
+    $(gridContainer).click(function(e) {
+        let clickedRow = $(e.target).closest('.available').attr('data-row');
+        let clickedColumn = $(e.target).closest('.available').attr('data-column');
+
+        if (clickedRow !== undefined || clickedColumn !== undefined) {
+            _gameBoard[clickedRow][clickedColumn] = hasTurn;
+            let opponent = getOpponentDisc();
+            replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+
+            SPA.api.updatePlayerTurn(gameId, _players);
+
+            SPA.api.getPlayers(gameId).then(function(players) {
+                SPA.gameBoard.storePlayersLocally(players);
+            });
+            SPA.api.updateGame(gameId, _gameBoard).then(function() {
+                SPA.gameBoard.getTurn();
+            });
+            SPA.api.getGame(gameId).then(function(result) {
+                SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
+            });
+        }
+    });
 
     function calculatePossibleMoves() {
         let opponent = getOpponentDisc();
@@ -209,31 +232,6 @@ SPA.gameBoard = (function() {
             iteration++;
         }
     }
-
-    $(gridContainer).click(function(e) {
-            let clickedRow = $(e.target).closest('.available').attr('data-row');
-            let clickedColumn = $(e.target).closest('.available').attr('data-column');
-
-            if (clickedRow !== undefined || clickedColumn !== undefined) {
-                _gameBoard[clickedRow][clickedColumn] = hasTurn;
-                let opponent = getOpponentDisc();
-                replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-                replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-                replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-                replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-
-                SPA.api.updatePlayerTurn(gameId, _players);
-
-                SPA.api.getPlayers(gameId).then(function(players) {
-                    SPA.gameBoard.storePlayersLocally(players);
-                    SPA.api.updateGame(gameId, _gameBoard);
-                    SPA.gameBoard.getTurn();
-                });
-                SPA.api.getGame(gameId).then(function(result) {
-                    SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
-                });
-            }
-    });
 
     function replaceOpponentRight(row, column, opponent) {
         let iteration = 1;

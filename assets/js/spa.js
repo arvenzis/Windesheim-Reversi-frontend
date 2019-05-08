@@ -16,9 +16,9 @@ var SPA = (function() {
         $("body").append("<section id='spa'></section>");
 
 
-        //SPA.data.createGame(gameBoard);
-        //SPA.data.createPlayer(1, "Karen", true, Disc.white);
-        //SPA.data.createPlayer(1, "Floor", false, Disc.black);
+        //SPA.api.createGame(gameBoard);
+        //SPA.api.createPlayer(1, "Karen", true, Disc.white);
+        //SPA.api.createPlayer(1, "Floor", false, Disc.black);
         let gameId = 1;
         SPA.api.getPlayers(gameId).then(function(players) {
              SPA.gameBoard.storePlayersLocally(players);
