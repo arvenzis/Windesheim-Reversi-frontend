@@ -1,6 +1,8 @@
 var SPA = (function() {
     function init() {
         SPA.api.init('production', 'api/game/');
+        $("body").append("<section id='spa'></section>");
+        SPA.login.init();
 
         let gameBoard = [
             [null, null, null, null, null, null, null, null],
@@ -13,21 +15,22 @@ var SPA = (function() {
             [null, null, null, null, null, null, null, null],
         ];
 
-        $("body").append("<section id='spa'></section>");
+        //
+        // $("#spa").append("<div id='grid-container'></div>");
 
 
         //SPA.api.createGame(gameBoard);
         //SPA.api.createPlayer(1, "Karen", true, Disc.white);
         //SPA.api.createPlayer(1, "Floor", false, Disc.black);
-        let gameId = 1;
-        SPA.api.getPlayers(gameId).then(function(players) {
-             SPA.gameBoard.storePlayersLocally(players);
-            SPA.api.updateGame(gameId, gameBoard);
-            SPA.gameBoard.getTurn();
-        });
-        SPA.api.getGame(gameId).then(function(result) {
-            SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
-        });
+        // let gameId = 1;
+        // SPA.api.getPlayers(gameId).then(function(players) {
+        //      SPA.gameBoard.storePlayersLocally(players);
+        //     SPA.api.updateGame(gameId, gameBoard);
+        //     SPA.gameBoard.getTurn();
+        // });
+        // SPA.api.getGame(gameId).then(function(result) {
+        //     SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
+        // });
 
         //SPA.popup.show("Karen", "Is heel aardig", AlertType.success);
     }

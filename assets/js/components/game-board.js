@@ -20,7 +20,7 @@ SPA.gameBoard = (function() {
 
     function getTurn() {
         _players.forEach(function (player) {
-            console.log(player.name + " " + player.hasTurn);
+            console.log(player.username + " " + player.hasTurn);
             if (player.hasTurn === true) {
                 hasTurn = player.discColor;
             }

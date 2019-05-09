@@ -19,7 +19,7 @@ SPA.popup = (function() {
                          "</div>");
         }
 
-        document.getElementById("spa").appendChild(container);
+        document.getElementById("spa").prepend(container);
         document.getElementById("slide-up").appendChild(el);
     }
 
