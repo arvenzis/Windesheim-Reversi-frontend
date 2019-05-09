@@ -46,15 +46,9 @@ SPA.api = (function() {
     function updatePlayerTurn(gameId, players) {
         if (configMap.environment === "production") {
             players.forEach(function (player) {
-                if (player.hasTurn === true) {
-                    let data = JSON.stringify({"gameId": gameId, "hasTurn": false});
-                    SPA.data.doCall(uri + "api/player/" + player.id, "PUT", data);
-                } else if (player.hasTurn === false) {
-                    let data = JSON.stringify({"gameId": gameId, "hasTurn": true});
-                    SPA.data.doCall(uri + "api/player/" + player.id, "PUT", data);
-                }
+                let data = JSON.stringify({"gameId": gameId, "hasTurn": !player.hasTurn});
+                SPA.data.doCall(uri + "api/player/" + player.id, "PUT", data);
             });
-            console.log("Players have been updated");
         }
     }
 

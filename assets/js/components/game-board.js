@@ -19,12 +19,12 @@ SPA.gameBoard = (function() {
     }
 
     function getTurn() {
-            _players.forEach(function (player) {
-                console.log(player.name + " " + player.hasTurn);
-                if (player.hasTurn === true) {
-                    hasTurn = player.discColor;
-                }
-            });
+        _players.forEach(function (player) {
+            console.log(player.name + " " + player.hasTurn);
+            if (player.hasTurn === true) {
+                hasTurn = player.discColor;
+            }
+        });
     }
 
     let rows = 8;
@@ -78,11 +78,12 @@ SPA.gameBoard = (function() {
             SPA.api.updatePlayerTurn(gameId, _players);
 
             SPA.api.getPlayers(gameId).then(function(players) {
-                SPA.gameBoard.storePlayersLocally(players);
+                SPA.gameBoard.storePlayersLocally(players).then(function() {
+                    SPA.api.updateGame(gameId, _gameBoard);
+                    SPA.gameBoard.getTurn();
+                });
             });
-            SPA.api.updateGame(gameId, _gameBoard).then(function() {
-                SPA.gameBoard.getTurn();
-            });
+
             SPA.api.getGame(gameId).then(function(result) {
                 SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
             });
