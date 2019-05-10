@@ -11,10 +11,12 @@ SPA.reversi = (function() {
     }
 
     function searchGame() {
+        let json = sessionStorage.getItem("player");
+        let player = $.parseJSON(json);
+        console.log("Searching game for player: " + player.username);
 
-        console.log("Searching game...");
+        //Heeft deze speler al een spel (gameId)?
 
-        //Bestaat er al een spel (gameId)?
         //Zo ja, laad dat spel in
         //Zo nee, kijk of er andere spelers zijn die nog geen tegenstander hebben
         // Zo nee, maak een nieuw spel
