@@ -9,20 +9,11 @@ SPA.login = (function() {
 
             SPA.api.validateLogin(username, password, function(result) {
                 if (result) {
-                    SPA.gameBoard.searchGame();
+                    return SPA.reversi.init();
                 }
+
+                SPA.popup.show("Mislukt", "De gegevens komen helaas niet voor in onze database", AlertType.error); // Todo: sliding transition werkt niet meer?
             });
-
-            // let loginData = JSON.stringify({"username" : username, "password" : password});
-            // SPA.data.doCall("https://localhost:5003/api/auth", "POST", loginData).then(function() {
-            //     console.log("Hier! Ie dut t weh");
-            //     return true;
-            // }).catch(function() {
-            //     console.log("Kannieinloggenie");
-            //     return false;
-            // });
-
-            SPA.popup.show("Mislukt", "De gegevens komen helaas niet voor in onze database", AlertType.error); // Todo: sliding transition werkt niet meer?
         });
     }
 

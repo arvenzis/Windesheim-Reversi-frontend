@@ -14,8 +14,6 @@ SPA.api = (function() {
              let loginData = JSON.stringify({"username" : username, "password" : password});
              SPA.data.doCall(uri + "api/auth", "POST", loginData).then(function(player) {
                  callback(player);
-             }).catch(function() {
-                 callback(false);
              });
         }
     }
