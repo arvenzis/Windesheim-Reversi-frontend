@@ -5,6 +5,16 @@ SPA.gameBoard = (function() {
     let hasTurn;
     let gridContainer = '#grid-container';
 
+    function searchGame() {
+        //Bestaat er al een spel (gameId)?
+                //Zo ja, laad dat spel in
+                //Zo nee, kijk of er andere spelers zijn die nog geen tegenstander hebben
+                // Zo nee, maak een nieuw spel
+                // Zo ja, vraag de gevonden speler of deze speler het spel mag joinen
+                //Zo ja, voeg de speler toe aan het gevonden spel
+                //Zo nee, zoek verder
+    }
+
     function init(id, gameBoard) {
         gameId = id;
         _gameBoard = gameBoard;
@@ -304,6 +314,7 @@ SPA.gameBoard = (function() {
     }
 
     return {
+        searchGame,
         init,
         storePlayersLocally,
         getTurn

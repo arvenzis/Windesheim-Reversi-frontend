@@ -9,11 +9,14 @@ SPA.api = (function() {
         }
     }
 
-    function validateLogin(username, password) {
+    function validateLogin(username, password, callback) {
          if (configMap.environment === "production") {
-             console.log("validate die login g");
-            let data = JSON.stringify({"username" : username, "password": password});
-            return SPA.data.doCall(uri + "api/auth", "POST", data);
+             let loginData = JSON.stringify({"username" : username, "password" : password});
+             SPA.data.doCall(uri + "api/auth", "POST", loginData).then(function(player) {
+                 callback(player);
+             }).catch(function() {
+                 callback(false);
+             });
         }
     }
 
@@ -36,9 +39,9 @@ SPA.api = (function() {
         }
     }
 
-    function createPlayer(gameId, name, hasTurn, discColor) {
+    function createPlayer(gameId, username, password, hasTurn, discColor) {
         if (configMap.environment === "production") {
-            let data = JSON.stringify({"gameId" : gameId, "name" : name, "hasTurn" : hasTurn, "discColor" : discColor});
+            let data = JSON.stringify({"gameId" : gameId, "username" : username, "password" : password, "hasTurn" : hasTurn, "discColor" : discColor});
             return SPA.data.doCall(uri + "api/player", "POST", data);
         }
     }
@@ -53,7 +56,7 @@ SPA.api = (function() {
     function updatePlayerTurn(gameId, players) {
         if (configMap.environment === "production") {
             players.forEach(function (player) {
-                let data = JSON.stringify({"gameId": gameId, "name": player.username, "hasTurn": !player.hasTurn, "discColor": player.discColor});
+                let data = JSON.stringify({"gameId": gameId, "username": player.username, "hasTurn": !player.hasTurn, "discColor": player.discColor});
                 SPA.data.doCall(uri + "api/player/" + player.id, "PUT", data);
             });
         }

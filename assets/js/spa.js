@@ -20,8 +20,8 @@ var SPA = (function() {
 
 
         //SPA.api.createGame(gameBoard);
-        //SPA.api.createPlayer(1, "Karen", true, Disc.white);
-        //SPA.api.createPlayer(1, "Floor", false, Disc.black);
+        //SPA.api.createPlayer(1, "Karen", "Snaas", true, Disc.white);
+        //SPA.api.createPlayer(1, "Floor", "Snoos", false, Disc.black);
         // let gameId = 1;
         // SPA.api.getPlayers(gameId).then(function(players) {
         //      SPA.gameBoard.storePlayersLocally(players);
