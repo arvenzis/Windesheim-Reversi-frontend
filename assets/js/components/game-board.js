@@ -8,6 +8,11 @@ SPA.gameBoard = (function() {
     function init(id, gameBoard) {
         gameId = id;
         _gameBoard = gameBoard;
+
+        $("#spa").empty().append("<div id='grid-container'></div>");
+
+        console.log(_gameBoard);
+
         drawGameBoard();
     }
 

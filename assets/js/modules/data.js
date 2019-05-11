@@ -9,8 +9,8 @@ SPA.data = (function() {
                 success: function (result) {
                     resolve(result);
                 },
-                error: function (errorMessage) {
-                    reject(errorMessage);
+                error: function (request) {
+                    reject(request); // undefined?
                 }
             });
         });

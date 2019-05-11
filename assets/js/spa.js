@@ -4,24 +4,15 @@ var SPA = (function() {
         $("body").append("<section id='spa'></section>");
         SPA.login.init();
 
-        let gameBoard = [
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, Disc.black, Disc.white, null, null, null],
-            [null, null, null, Disc.white, Disc.black, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-        ];
 
         //
         // $("#spa").append("<div id='grid-container'></div>");
 
 
-        //SPA.api.createGame(gameBoard);
-        //SPA.api.createPlayer(1, "Karen", "Snaas", true, Disc.white);
-        //SPA.api.createPlayer(1, "Floor", "Snoos", false, Disc.black);
+        //SPA.api.createGame();
+        //SPA.api.createPlayer(2, "Jantje", "Jan", false, Disc.black);
+        //SPA.api.createPlayer(2, "Pietje", "Piet", true, Disc.white);
+        //SPA.api.createPlayer(3, "Floor2", "Snoos2", false, Disc.black);
         // let gameId = 1;
         // SPA.api.getPlayers(gameId).then(function(players) {
         //      SPA.gameBoard.storePlayersLocally(players);

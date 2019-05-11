@@ -18,15 +18,27 @@ SPA.api = (function() {
         }
     }
 
-    function getGame(id) {
+    function getGames(callback) {
         if (configMap.environment === "production") {
-            return SPA.data.doCall(uri + configMap.endpoints + id, "GET");
+            SPA.data.doCall(uri + configMap.endpoints, "GET").then(function(games) {
+                callback(games);
+            })
         }
     }
 
-    function getPlayers(gameId) {
+    function getGame(id, callback) {
         if (configMap.environment === "production") {
-            return SPA.data.doCall(uri + "api/player/" + gameId, "GET");
+            SPA.data.doCall(uri + configMap.endpoints + id, "GET").then(function(game) {
+                callback(game);
+            })
+        }
+    }
+
+    function getPlayers(gameId, callback) {
+        if (configMap.environment === "production") {
+            SPA.data.doCall(uri + "api/player/" + gameId, "GET").then(function(players) {
+                callback(players);
+            });
         }
     }
 
@@ -63,6 +75,7 @@ SPA.api = (function() {
     return {
         init,
         validateLogin,
+        getGames,
         getGame,
         getPlayers,
         createGame,

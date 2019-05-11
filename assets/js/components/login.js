@@ -1,7 +1,7 @@
 SPA.login = (function() {
 
     function init() {
-        let json = sessionStorage.getItem("player");
+        let json = sessionStorage.getItem("player"); // Todo: misschien enkel de statische gegevens opslaan
         let player = $.parseJSON(json);
 
         if (player !== null) {
@@ -20,7 +20,7 @@ SPA.login = (function() {
                     return SPA.reversi.init();
                 }
 
-                SPA.popup.show("Mislukt", "De gegevens komen helaas niet voor in onze database", AlertType.error); // Todo: sliding transition werkt niet meer?
+                SPA.popup.show("Login failed", "The credentials don't appear to be in our database", AlertType.error); // Todo: sliding transition werkt niet meer?
             });
         });
     }
