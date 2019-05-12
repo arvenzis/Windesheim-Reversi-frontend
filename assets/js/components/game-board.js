@@ -7,7 +7,7 @@ SPA.gameBoard = (function() {
 
     function init(id, gameBoard) {
         gameId = id;
-        _gameBoard = gameBoard;
+        _gameBoard = JSON.parse(gameBoard);
 
         $("#spa").empty().append("<div id='grid-container'></div>");
 
