@@ -9,10 +9,13 @@ var SPA = (function() {
         // $("#spa").append("<div id='grid-container'></div>");
 
 
-        //SPA.api.createGame();
-        //SPA.api.createPlayer(2, "Jantje", "Jan", false, Disc.black);
-        //SPA.api.createPlayer(2, "Pietje", "Piet", true, Disc.white);
-        //SPA.api.createPlayer(3, "Floor2", "Snoos2", false, Disc.black);
+        // SPA.api.createGame();
+        // SPA.api.createGame();
+        // SPA.api.createGame();
+        // SPA.api.createPlayer(1, "Jantje", "Jan", false, Disc.black);
+        // SPA.api.createPlayer(1, "Pietje", "Piet", true, Disc.white);
+        // SPA.api.createPlayer(2, "Floor", "Snoos", false, Disc.black);
+        // SPA.api.createPlayer(null, "Karen", "Snaas", false, Disc.black);
         // let gameId = 1;
         // SPA.api.getPlayers(gameId).then(function(players) {
         //      SPA.gameBoard.storePlayersLocally(players);

@@ -42,8 +42,19 @@ SPA.api = (function() {
         }
     }
 
-    function createGame(gameBoard) {
+    function createGame() {
         if (configMap.environment === "production") {
+            let gameBoard = [
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, Disc.black, Disc.white, null, null, null],
+                [null, null, null, Disc.white, Disc.black, null, null, null],
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, null, null, null, null, null],
+            ];
+
             let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
             return SPA.data.doCall(uri + configMap.endpoints, "POST", data);
         }
@@ -60,6 +71,16 @@ SPA.api = (function() {
         if (configMap.environment === "production") {
             let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
             return SPA.data.doCall(uri + configMap.endpoints + id, "PUT", data);
+        }
+    }
+
+    function AddPlayerToGame(gameId, player, opponent) {
+        if (configMap.environment === "production") {
+            player.discColor = opponent[0].discColor === Disc.white ? Disc.black : Disc.white;
+
+            let data = JSON.stringify({"gameId": gameId, "username": player.username, "hasTurn": !opponent[0].hasTurn, "discColor": player.discColor});
+
+            SPA.data.doCall(uri + "api/player/" + player.id, "PUT", data);
         }
     }
 
@@ -81,6 +102,7 @@ SPA.api = (function() {
         createGame,
         createPlayer,
         updateGame,
+        AddPlayerToGame,
         updatePlayerTurn
     }
 })();
