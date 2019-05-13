@@ -6,23 +6,38 @@ SPA.gameBoard = (function() {
     let Opponent;
     let GridContainer = '#grid-container';
 
-    function init(id, gameBoard) {
-        GameId = id;
-        GameBoard = JSON.parse(gameBoard);
-        SPA.api.getPlayers(id, function(players) {
-            Players = players;
-        });
-        Player = SPA.sessionStorage.getPlayer();
-        Opponent = getOpponentDisc();
+    window.setInterval(function(){
+        prepareGameBoard();
+    }, 1000);
 
-        $("#spa").empty().append("<div id='grid-container'></div>");
-        drawGameBoard();
+    function init(id) {
+        GameId = id;
+        prepareGameBoard();
     }
 
-    function storePlayersLocally(players) {
-        return new Promise(function(resolve) {
-            Players = players;
-            resolve();
+    function prepareGameBoard() {
+        console.log("Uitgevoerd");
+        SPA.api.getGame(GameId, function(game) {
+            GameBoard = JSON.parse(game[0].gameBoard);
+
+            Player = SPA.sessionStorage.getPlayer();
+            if (Player.discColor === Disc.white) {
+                Opponent = Disc.black;
+            }
+            else if(Player.discColor === Disc.black) {
+                Opponent = Disc.white;
+            }
+            SPA.api.getPlayers(GameId, function(players) {
+                Players = players;
+                players.forEach(function(player) {
+                    if (player.id === SPA.sessionStorage.getPlayer().id)
+                    {
+                        SPA.sessionStorage.setPlayer(player);
+                    }
+                });
+            });
+            $("#spa").empty().append("<div id='grid-container'></div>");
+            drawGameBoard();
         });
     }
 
@@ -78,14 +93,8 @@ SPA.gameBoard = (function() {
 
             SPA.api.updatePlayerTurn(GameId, Players);
 
-            SPA.api.getPlayers(GameId, function(players) {
-                SPA.gameBoard.storePlayersLocally(players).then(function() {
-                    SPA.api.updateGame(GameId, GameBoard).then(function() {
-                        SPA.api.getGame(GameId, function(result) {
-                            SPA.gameBoard.init(result[0].id, result[0].gameBoard);
-                        });
-                    });
-                });
+            SPA.api.updateGame(GameId, GameBoard).then(function() {
+                prepareGameBoard();
             });
         }
     });
@@ -293,17 +302,7 @@ SPA.gameBoard = (function() {
         }
     }
 
-    function getOpponentDisc() {
-        if (Player.discColor === Disc.white) {
-            return Disc.black;
-        }
-        else if(Player.discColor === Disc.black) {
-            return Disc.white;
-        }
-    }
-
     return {
-        init,
-        storePlayersLocally
+        init
     }
 }) ();

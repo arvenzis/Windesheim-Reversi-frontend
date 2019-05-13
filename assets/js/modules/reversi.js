@@ -20,8 +20,8 @@ SPA.reversi = (function() {
         loadExistingGame().catch(function() {
             loadingText.text("Searching for opponents");
             //Zo nee, kijk of er andere spelers zijn die nog geen tegenstander hebben
-            addPlayerToExistingGame().then(function(game) {
-                SPA.gameBoard.init(player.gameId, game.gameBoard);
+            addPlayerToExistingGame().then(function() {
+                SPA.gameBoard.init(player.gameId);
             }).catch(function() {
                 // Zo nee, maak een nieuw spel
                 loadingText.text("Creating new game");
@@ -36,7 +36,7 @@ SPA.reversi = (function() {
                 //Zo ja, laad dat spel in
                 SPA.api.getGame(player.gameId, function (result) {
                     if (result) {
-                        SPA.gameBoard.init(player.gameId, result[0].gameBoard);
+                        SPA.gameBoard.init(player.gameId);
                         resolve();
                     }
                     loadingText.text("The game doesn't seem to exist anymore");
