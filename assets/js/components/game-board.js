@@ -4,12 +4,14 @@ SPA.gameBoard = (function() {
     let _players;
     let player;
     let hasTurn;
+    let opponent;
     let gridContainer = '#grid-container';
 
     function init(id, gameBoard) {
         gameId = id;
         _gameBoard = JSON.parse(gameBoard);
         player = SPA.sessionStorage.getPlayer();
+        opponent = getOpponentDisc();
 
         $("#spa").empty().append("<div id='grid-container'></div>");
         console.log(gridContainer);
@@ -74,11 +76,10 @@ SPA.gameBoard = (function() {
 
         if (clickedRow !== undefined || clickedColumn !== undefined) {
             _gameBoard[clickedRow][clickedColumn] = player.discColor;
-            let opponent = getOpponentDisc();
-            replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-            replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-            replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn), opponent);
-            replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn), opponent);
+            replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn));
+            replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn));
+            replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn));
+            replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn));
 
             SPA.api.updatePlayerTurn(gameId, _players);
 
@@ -97,7 +98,6 @@ SPA.gameBoard = (function() {
 
 
     function calculatePossibleMoves() {
-        let opponent = getOpponentDisc();
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
 
@@ -240,7 +240,7 @@ SPA.gameBoard = (function() {
         }
     }
 
-    function replaceOpponentRight(row, column, opponent) {
+    function replaceOpponentRight(row, column) {
         let iteration = 1;
 
         for (let i = column; i < 8; i++) {
@@ -255,7 +255,7 @@ SPA.gameBoard = (function() {
         }
     }
 
-    function replaceOpponentLeft(row, column, opponent) {
+    function replaceOpponentLeft(row, column) {
         let iteration = 1;
 
         for (let i = column; i > -1; i--) {
@@ -270,7 +270,7 @@ SPA.gameBoard = (function() {
         }
     }
 
-    function replaceOpponentAbove(row, column, opponent) {
+    function replaceOpponentAbove(row, column) {
         let iteration = 1;
 
         for (let i = column; i > -1; i--) {
@@ -285,7 +285,7 @@ SPA.gameBoard = (function() {
         }
     }
 
-    function replaceOpponentBelow(row, column, opponent) {
+    function replaceOpponentBelow(row, column) {
         let iteration = 1;
 
         for (let i = column; i < 8; i++) {
