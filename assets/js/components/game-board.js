@@ -12,7 +12,7 @@ SPA.gameBoard = (function() {
         player = SPA.sessionStorage.getPlayer();
 
         $("#spa").empty().append("<div id='grid-container'></div>");
-
+        console.log(gridContainer);
         drawGameBoard();
     }
 
@@ -68,7 +68,7 @@ SPA.gameBoard = (function() {
         return disc;
     }
 
-    $(gridContainer).click(function(e) {
+    $(document).on('click', gridContainer, function(e) {
         let clickedRow = $(e.target).closest('.available').attr('data-row');
         let clickedColumn = $(e.target).closest('.available').attr('data-column');
 
@@ -94,6 +94,7 @@ SPA.gameBoard = (function() {
             });
         }
     });
+
 
     function calculatePossibleMoves() {
         let opponent = getOpponentDisc();
