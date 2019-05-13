@@ -1,8 +1,7 @@
 SPA.login = (function() {
 
     function init() {
-        let json = sessionStorage.getItem("player"); // Todo: misschien enkel de statische gegevens opslaan
-        let player = $.parseJSON(json);
+        let player = SPA.sessionStorage.getPlayer();
 
         if (player !== null) {
             return SPA.reversi.init();
@@ -16,7 +15,7 @@ SPA.login = (function() {
 
             SPA.api.validateLogin(username, password, function(result) {
                 if (result) {
-                    sessionStorage.setItem("player", JSON.stringify(result));
+                    SPA.sessionStorage.setPlayer(result);
                     return SPA.reversi.init();
                 }
 

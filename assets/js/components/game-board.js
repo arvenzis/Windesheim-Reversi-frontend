@@ -2,16 +2,16 @@ SPA.gameBoard = (function() {
     let gameId;
     let _gameBoard = [];
     let _players;
+    let player;
     let hasTurn;
     let gridContainer = '#grid-container';
 
     function init(id, gameBoard) {
         gameId = id;
         _gameBoard = JSON.parse(gameBoard);
+        player = SPA.sessionStorage.getPlayer();
 
         $("#spa").empty().append("<div id='grid-container'></div>");
-
-        console.log(_gameBoard);
 
         drawGameBoard();
     }
@@ -36,7 +36,7 @@ SPA.gameBoard = (function() {
     let columns = 8;
 
     function drawGameBoard() {
-        console.log("Draw gameboard. This player has to make a move: " + hasTurn);
+        console.log("Draw gameboard. This player has to make a move: " + player.discColor);
         $(gridContainer).empty(); // make sure the grid-container is redrawn
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
@@ -73,7 +73,7 @@ SPA.gameBoard = (function() {
         let clickedColumn = $(e.target).closest('.available').attr('data-column');
 
         if (clickedRow !== undefined || clickedColumn !== undefined) {
-            _gameBoard[clickedRow][clickedColumn] = hasTurn;
+            _gameBoard[clickedRow][clickedColumn] = player.discColor;
             let opponent = getOpponentDisc();
             replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn), opponent);
             replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn), opponent);
@@ -101,28 +101,28 @@ SPA.gameBoard = (function() {
             for (let column = 0; column < columns; column++) {
 
                 if (_gameBoard[row][column] === opponent) {
-                    if (_gameBoard[row][column + 1] === hasTurn) {
+                    if (_gameBoard[row][column + 1] === player.discColor) {
                         checkLeft(row, column);
                     }
-                    if (_gameBoard[row][column - 1] === hasTurn) {
+                    if (_gameBoard[row][column - 1] === player.discColor) {
                         checkRight(row, column);
                     }
-                    if (_gameBoard[row + 1][column] === hasTurn) {
+                    if (_gameBoard[row + 1][column] === player.discColor) {
                         checkAbove(row, column);
                     }
-                    if (_gameBoard[row - 1][column] === hasTurn) {
+                    if (_gameBoard[row - 1][column] === player.discColor) {
                         checkBelow(row, column);
                     }
-                    if (_gameBoard[row + 1][column + 1] === hasTurn) {
+                    if (_gameBoard[row + 1][column + 1] === player.discColor) {
                         checkLeftAbove(row, column);
                     }
-                    if (_gameBoard[row + 1][column - 1] === hasTurn) {
+                    if (_gameBoard[row + 1][column - 1] === player.discColor) {
                         checkRightAbove(row, column);
                     }
-                    if (_gameBoard[row - 1][column + 1] === hasTurn) {
+                    if (_gameBoard[row - 1][column + 1] === player.discColor) {
                         checkLeftBelow(row, column);
                     }
-                    if (_gameBoard[row - 1][column - 1] === hasTurn) {
+                    if (_gameBoard[row - 1][column - 1] === player.discColor) {
                         checkRightBelow(row, column);
                     }
                 }
@@ -137,7 +137,7 @@ SPA.gameBoard = (function() {
             if (_gameBoard[row][column - iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row][column - iteration] === hasTurn) {
+            } else if (_gameBoard[row][column - iteration] === player.discColor) {
                 return;
             }
             iteration++;
@@ -150,7 +150,7 @@ SPA.gameBoard = (function() {
             if (_gameBoard[row][column + iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row][column + iteration] === hasTurn) {
+            } else if (_gameBoard[row][column + iteration] === player.discColor) {
                 return;
             }
             iteration++;
@@ -163,7 +163,7 @@ SPA.gameBoard = (function() {
             if (_gameBoard[row - iteration][column] === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row - iteration][column] === hasTurn) {
+            } else if (_gameBoard[row - iteration][column] === player.discColor) {
                 return;
             }
             iteration++;
@@ -176,7 +176,7 @@ SPA.gameBoard = (function() {
             if (_gameBoard[row + iteration][column] === null) {
                 $('div[data-row="' + (row  + iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row + iteration][column] === hasTurn) {
+            } else if (_gameBoard[row + iteration][column] === player.discColor) {
                 return;
             }
             iteration++;
@@ -190,7 +190,7 @@ SPA.gameBoard = (function() {
             if (field === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
-            } else if (field === hasTurn) {
+            } else if (field === player.discColor) {
                 return;
             }
             iteration++;
@@ -204,7 +204,7 @@ SPA.gameBoard = (function() {
             if (field === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
-            } else if (field === hasTurn) {
+            } else if (field === player.discColor) {
                 return;
             }
             iteration++;
@@ -218,7 +218,7 @@ SPA.gameBoard = (function() {
             if (field === null) {
                 $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
-            } else if (field === hasTurn) {
+            } else if (field === player.discColor) {
                 return;
             }
             iteration++;
@@ -232,7 +232,7 @@ SPA.gameBoard = (function() {
             if (field === null) {
                 $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
-            } else if (field === hasTurn) {
+            } else if (field === player.discColor) {
                 return;
             }
             iteration++;
@@ -244,10 +244,10 @@ SPA.gameBoard = (function() {
 
         for (let i = column; i < 8; i++) {
             if (_gameBoard[row][column + iteration] === opponent) {
-                _gameBoard[row][column + iteration] = hasTurn;
+                _gameBoard[row][column + iteration] = player.discColor;
                 return;
             }
-            else if(_gameBoard[row][column + iteration] === hasTurn || _gameBoard[row][column + iteration] === null) {
+            else if(_gameBoard[row][column + iteration] === player.discColor || _gameBoard[row][column + iteration] === null) {
                 return;
             }
             iteration++;
@@ -259,10 +259,10 @@ SPA.gameBoard = (function() {
 
         for (let i = column; i > -1; i--) {
             if (_gameBoard[row][column - iteration] === opponent) {
-                _gameBoard[row][column - iteration] = hasTurn;
+                _gameBoard[row][column - iteration] = player.discColor;
                 return;
             }
-            else if(_gameBoard[row][column - iteration] === hasTurn || _gameBoard[row][column - iteration] === null) {
+            else if(_gameBoard[row][column - iteration] === player.discColor || _gameBoard[row][column - iteration] === null) {
                 return;
             }
             iteration++;
@@ -274,10 +274,10 @@ SPA.gameBoard = (function() {
 
         for (let i = column; i > -1; i--) {
             if (_gameBoard[row - iteration][column] === opponent) {
-                _gameBoard[row - iteration][column] = hasTurn;
+                _gameBoard[row - iteration][column] = player.discColor;
                 return;
             }
-            else if(_gameBoard[row - iteration][column] === hasTurn || _gameBoard[row - iteration][column] === null) {
+            else if(_gameBoard[row - iteration][column] === player.discColor || _gameBoard[row - iteration][column] === null) {
                 return;
             }
             iteration++;
@@ -289,10 +289,10 @@ SPA.gameBoard = (function() {
 
         for (let i = column; i < 8; i++) {
             if (_gameBoard[row + iteration][column] === opponent) {
-                _gameBoard[row + iteration][column] = hasTurn;
+                _gameBoard[row + iteration][column] = player.discColor;
                 return;
             }
-            else if(_gameBoard[row + iteration][column] === hasTurn || _gameBoard[row + iteration][column] === null) {
+            else if(_gameBoard[row + iteration][column] === player.discColor || _gameBoard[row + iteration][column] === null) {
                 return;
             }
             iteration++;
@@ -300,10 +300,10 @@ SPA.gameBoard = (function() {
     }
 
     function getOpponentDisc() {
-        if (hasTurn === Disc.white) {
+        if (player.discColor === Disc.white) {
             return Disc.black;
         }
-        else if(hasTurn === Disc.black) {
+        else if(player.discColor === Disc.black) {
             return Disc.white;
         }
     }

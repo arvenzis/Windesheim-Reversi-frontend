@@ -11,14 +11,14 @@ SPA.reversi = (function() {
     }
 
     function showLoader() {
-        $("#spa").append('<div class="loader-container"><h2 class="loading-text">Searching for opponents</h2><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>');
+        $("#spa").append('<div class="loader-container"><h2 class="loading-text">Loading</h2><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>');
         loadingText = $(".loading-text");
     }
 
     function searchOpponent() {
         //Heeft deze speler al een spel (gameId)?
-
         loadExistingGame().catch(function() {
+            loadingText.text("Searching for opponents");
             //Zo nee, kijk of er andere spelers zijn die nog geen tegenstander hebben
             addPlayerToExistingGame().then(function(game) {
                 SPA.gameBoard.init(player.gameId, game.gameBoard);
@@ -36,7 +36,6 @@ SPA.reversi = (function() {
                 //Zo ja, laad dat spel in
                 SPA.api.getGame(player.gameId, function (result) {
                     if (result) {
-                        loadingText.text("Loading game");
                         SPA.gameBoard.init(player.gameId, result[0].gameBoard);
                         resolve();
                     }
@@ -62,7 +61,7 @@ SPA.reversi = (function() {
                             SPA.api.AddPlayerToGame(game.id, player, opponent);
                             //storage updaten
                             player.gameId = game.id;
-                            sessionStorage.setItem("player", JSON.stringify(player));
+                            SPA.sessionStorage.setPlayer(player);
                             resolve(game);
                             //Todo: Zo nee, voer dezelfde actie uit tot er een game is waarbij de speler mag joinen OF tot er geen spelers meer zijn die geen spel hebben
                         }
