@@ -1,36 +1,28 @@
 SPA.gameBoard = (function() {
-    let gameId;
-    let _gameBoard = [];
-    let _players;
-    let player;
-    let hasTurn;
-    let opponent;
-    let gridContainer = '#grid-container';
+    let GameId;
+    let GameBoard;
+    let Players;
+    let Player;
+    let Opponent;
+    let GridContainer = '#grid-container';
 
     function init(id, gameBoard) {
-        gameId = id;
-        _gameBoard = JSON.parse(gameBoard);
-        player = SPA.sessionStorage.getPlayer();
-        opponent = getOpponentDisc();
+        GameId = id;
+        GameBoard = JSON.parse(gameBoard);
+        SPA.api.getPlayers(id, function(players) {
+            Players = players;
+        });
+        Player = SPA.sessionStorage.getPlayer();
+        Opponent = getOpponentDisc();
 
         $("#spa").empty().append("<div id='grid-container'></div>");
-        console.log(gridContainer);
         drawGameBoard();
     }
 
     function storePlayersLocally(players) {
         return new Promise(function(resolve) {
-            _players = players;
-            resolve(_players);
-        });
-    }
-
-    function getTurn() {
-        _players.forEach(function (player) {
-            console.log(player.username + " " + player.hasTurn);
-            if (player.hasTurn === true) {
-                hasTurn = player.discColor;
-            }
+            Players = players;
+            resolve();
         });
     }
 
@@ -38,8 +30,8 @@ SPA.gameBoard = (function() {
     let columns = 8;
 
     function drawGameBoard() {
-        console.log("Draw gameboard. This player has to make a move: " + player.discColor);
-        $(gridContainer).empty(); // make sure the grid-container is redrawn
+        console.log("This player has to make a move: " + Player.discColor);
+        $(GridContainer).empty(); // make sure the grid-container is redrawn
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
                 let tile = document.createElement('div');
@@ -48,17 +40,20 @@ SPA.gameBoard = (function() {
                 tile.setAttribute('data-row', row.toString());
                 tile.setAttribute('data-column', column.toString());
 
-                $(tile).appendTo('#grid-container');
+                $(tile).appendTo(GridContainer);
 
-                if (_gameBoard[row][column] === Disc.white) {
+                if (GameBoard[row][column] === Disc.white) {
                     $(createDisc(Disc.white)).appendTo(tile);
                 }
-                else if (_gameBoard[row][column] === Disc.black) {
+                else if (GameBoard[row][column] === Disc.black) {
                     $(createDisc(Disc.black)).appendTo(tile);
                 }
             }
         }
-        calculatePossibleMoves();
+        if (Player.hasTurn)
+        {
+            calculatePossibleMoves();
+        }
     }
 
     function createDisc(color) {
@@ -70,60 +65,58 @@ SPA.gameBoard = (function() {
         return disc;
     }
 
-    $(document).on('click', gridContainer, function(e) {
+    $(document).on('click', GridContainer, function(e) {
         let clickedRow = $(e.target).closest('.available').attr('data-row');
         let clickedColumn = $(e.target).closest('.available').attr('data-column');
 
         if (clickedRow !== undefined || clickedColumn !== undefined) {
-            _gameBoard[clickedRow][clickedColumn] = player.discColor;
+            GameBoard[clickedRow][clickedColumn] = Player.discColor;
             replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn));
             replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn));
             replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn));
             replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn));
 
-            SPA.api.updatePlayerTurn(gameId, _players);
+            SPA.api.updatePlayerTurn(GameId, Players);
 
-            SPA.api.getPlayers(gameId).then(function(players) {
+            SPA.api.getPlayers(GameId, function(players) {
                 SPA.gameBoard.storePlayersLocally(players).then(function() {
-                    SPA.api.updateGame(gameId, _gameBoard);
-                    SPA.gameBoard.getTurn();
+                    SPA.api.updateGame(GameId, GameBoard).then(function() {
+                        SPA.api.getGame(GameId, function(result) {
+                            SPA.gameBoard.init(result[0].id, result[0].gameBoard);
+                        });
+                    });
                 });
-            });
-
-            SPA.api.getGame(gameId).then(function(result) {
-                SPA.gameBoard.init(result.id, JSON.parse(result.gameBoard));
             });
         }
     });
-
 
     function calculatePossibleMoves() {
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
 
-                if (_gameBoard[row][column] === opponent) {
-                    if (_gameBoard[row][column + 1] === player.discColor) {
+                if (GameBoard[row][column] === Opponent) {
+                    if (GameBoard[row][column + 1] === Player.discColor) {
                         checkLeft(row, column);
                     }
-                    if (_gameBoard[row][column - 1] === player.discColor) {
+                    if (GameBoard[row][column - 1] === Player.discColor) {
                         checkRight(row, column);
                     }
-                    if (_gameBoard[row + 1][column] === player.discColor) {
+                    if (GameBoard[row + 1][column] === Player.discColor) {
                         checkAbove(row, column);
                     }
-                    if (_gameBoard[row - 1][column] === player.discColor) {
+                    if (GameBoard[row - 1][column] === Player.discColor) {
                         checkBelow(row, column);
                     }
-                    if (_gameBoard[row + 1][column + 1] === player.discColor) {
+                    if (GameBoard[row + 1][column + 1] === Player.discColor) {
                         checkLeftAbove(row, column);
                     }
-                    if (_gameBoard[row + 1][column - 1] === player.discColor) {
+                    if (GameBoard[row + 1][column - 1] === Player.discColor) {
                         checkRightAbove(row, column);
                     }
-                    if (_gameBoard[row - 1][column + 1] === player.discColor) {
+                    if (GameBoard[row - 1][column + 1] === Player.discColor) {
                         checkLeftBelow(row, column);
                     }
-                    if (_gameBoard[row - 1][column - 1] === player.discColor) {
+                    if (GameBoard[row - 1][column - 1] === Player.discColor) {
                         checkRightBelow(row, column);
                     }
                 }
@@ -135,10 +128,10 @@ SPA.gameBoard = (function() {
     function checkLeft(row, column) {
         let iteration = 1;
         for (let i = column; i > -1; i--) {
-            if (_gameBoard[row][column - iteration] === null) {
+            if (GameBoard[row][column - iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row][column - iteration] === player.discColor) {
+            } else if (GameBoard[row][column - iteration] === Player.discColor) {
                 return;
             }
             iteration++;
@@ -148,10 +141,10 @@ SPA.gameBoard = (function() {
     function checkRight(row, column) {
         let iteration = 1;
         for (let i = column; i < 8; i++) {
-            if (_gameBoard[row][column + iteration] === null) {
+            if (GameBoard[row][column + iteration] === null) {
                 $('div[data-row="' + row + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row][column + iteration] === player.discColor) {
+            } else if (GameBoard[row][column + iteration] === Player.discColor) {
                 return;
             }
             iteration++;
@@ -161,10 +154,10 @@ SPA.gameBoard = (function() {
     function checkAbove(row, column) {
         let iteration = 1;
         for (let i = row; i > -1; i--) {
-            if (_gameBoard[row - iteration][column] === null) {
+            if (GameBoard[row - iteration][column] === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row - iteration][column] === player.discColor) {
+            } else if (GameBoard[row - iteration][column] === Player.discColor) {
                 return;
             }
             iteration++;
@@ -174,10 +167,10 @@ SPA.gameBoard = (function() {
     function checkBelow(row, column) {
         let iteration = 1;
         for (let i = row; i < 8; i++) {
-            if (_gameBoard[row + iteration][column] === null) {
+            if (GameBoard[row + iteration][column] === null) {
                 $('div[data-row="' + (row  + iteration) + '"]').filter('div[data-column="' + column + '"]').addClass('available');
                 return;
-            } else if (_gameBoard[row + iteration][column] === player.discColor) {
+            } else if (GameBoard[row + iteration][column] === Player.discColor) {
                 return;
             }
             iteration++;
@@ -187,11 +180,11 @@ SPA.gameBoard = (function() {
     function checkLeftAbove(row, column) {
         let iteration = 1;
         for (let i = row; i > -1; i--) {
-            let field = _gameBoard[row - iteration][column - iteration];
+            let field = GameBoard[row - iteration][column - iteration];
             if (field === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
-            } else if (field === player.discColor) {
+            } else if (field === Player.discColor) {
                 return;
             }
             iteration++;
@@ -201,11 +194,11 @@ SPA.gameBoard = (function() {
     function checkRightAbove(row, column) {
         let iteration = 1;
         for (let i = row; i < 8; i--) {
-            let field = _gameBoard[row - iteration][column + iteration];
+            let field = GameBoard[row - iteration][column + iteration];
             if (field === null) {
                 $('div[data-row="' + (row - iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
-            } else if (field === player.discColor) {
+            } else if (field === Player.discColor) {
                 return;
             }
             iteration++;
@@ -215,11 +208,11 @@ SPA.gameBoard = (function() {
     function checkLeftBelow(row, column) {
         let iteration = 1;
         for (let i = row; i > -1; i--) {
-            let field = _gameBoard[row + iteration][column - iteration];
+            let field = GameBoard[row + iteration][column - iteration];
             if (field === null) {
                 $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column - iteration) + '"]').addClass('available');
                 return;
-            } else if (field === player.discColor) {
+            } else if (field === Player.discColor) {
                 return;
             }
             iteration++;
@@ -229,11 +222,11 @@ SPA.gameBoard = (function() {
     function checkRightBelow(row, column) {
         let iteration = 1;
         for (let i = row; i < 8; i--) {
-            let field = _gameBoard[row + iteration][column + iteration];
+            let field = GameBoard[row + iteration][column + iteration];
             if (field === null) {
                 $('div[data-row="' + (row + iteration) + '"]').filter('div[data-column="' + (column + iteration) + '"]').addClass('available');
                 return;
-            } else if (field === player.discColor) {
+            } else if (field === Player.discColor) {
                 return;
             }
             iteration++;
@@ -244,11 +237,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i < 8; i++) {
-            if (_gameBoard[row][column + iteration] === opponent) {
-                _gameBoard[row][column + iteration] = player.discColor;
+            if (GameBoard[row][column + iteration] === Opponent) {
+                GameBoard[row][column + iteration] = Player.discColor;
                 return;
             }
-            else if(_gameBoard[row][column + iteration] === player.discColor || _gameBoard[row][column + iteration] === null) {
+            else if(GameBoard[row][column + iteration] === Player.discColor || GameBoard[row][column + iteration] === null) {
                 return;
             }
             iteration++;
@@ -259,11 +252,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i > -1; i--) {
-            if (_gameBoard[row][column - iteration] === opponent) {
-                _gameBoard[row][column - iteration] = player.discColor;
+            if (GameBoard[row][column - iteration] === Opponent) {
+                GameBoard[row][column - iteration] = Player.discColor;
                 return;
             }
-            else if(_gameBoard[row][column - iteration] === player.discColor || _gameBoard[row][column - iteration] === null) {
+            else if(GameBoard[row][column - iteration] === Player.discColor || GameBoard[row][column - iteration] === null) {
                 return;
             }
             iteration++;
@@ -274,11 +267,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i > -1; i--) {
-            if (_gameBoard[row - iteration][column] === opponent) {
-                _gameBoard[row - iteration][column] = player.discColor;
+            if (GameBoard[row - iteration][column] === Opponent) {
+                GameBoard[row - iteration][column] = Player.discColor;
                 return;
             }
-            else if(_gameBoard[row - iteration][column] === player.discColor || _gameBoard[row - iteration][column] === null) {
+            else if(GameBoard[row - iteration][column] === Player.discColor || GameBoard[row - iteration][column] === null) {
                 return;
             }
             iteration++;
@@ -289,11 +282,11 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i < 8; i++) {
-            if (_gameBoard[row + iteration][column] === opponent) {
-                _gameBoard[row + iteration][column] = player.discColor;
+            if (GameBoard[row + iteration][column] === Opponent) {
+                GameBoard[row + iteration][column] = Player.discColor;
                 return;
             }
-            else if(_gameBoard[row + iteration][column] === player.discColor || _gameBoard[row + iteration][column] === null) {
+            else if(GameBoard[row + iteration][column] === Player.discColor || GameBoard[row + iteration][column] === null) {
                 return;
             }
             iteration++;
@@ -301,17 +294,16 @@ SPA.gameBoard = (function() {
     }
 
     function getOpponentDisc() {
-        if (player.discColor === Disc.white) {
+        if (Player.discColor === Disc.white) {
             return Disc.black;
         }
-        else if(player.discColor === Disc.black) {
+        else if(Player.discColor === Disc.black) {
             return Disc.white;
         }
     }
 
     return {
         init,
-        storePlayersLocally,
-        getTurn
+        storePlayersLocally
     }
 }) ();
