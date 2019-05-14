@@ -1,6 +1,6 @@
 var SPA = (function() {
     function init() {
-        SPA.api.init('production', 'api/game/');
+        SPA.data.init('production');
         $("body").append("<section id='spa'></section>");
         SPA.login.init();
 

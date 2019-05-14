@@ -1,100 +1,96 @@
 SPA.api = (function() {
-    let configMap;
-    const uri = "https://localhost:5003/";
-
-    function init(env, endpoints){
-        configMap = {
-            environment: env,
-            endpoints: endpoints,
-        }
-    }
 
     function validateLogin(username, password, callback) {
-         if (configMap.environment === "production") {
-             let loginData = JSON.stringify({"username" : username, "password" : password});
-             SPA.data.doCall(uri + "api/auth", "POST", loginData).then(function(player) {
-                 callback(player);
-             });
-        }
+         let loginData = JSON.stringify({"username" : username, "password" : password});
+         SPA.data.doCall("api/auth", "POST", loginData).then(function(player) {
+             callback(player);
+         });
     }
 
     function getGames(callback) {
-        if (configMap.environment === "production") {
-            SPA.data.doCall(uri + configMap.endpoints, "GET").then(function(games) {
-                callback(games);
-            })
-        }
+        SPA.data.doCall("api/game", "GET").then(function(games) {
+            callback(games);
+        });
     }
 
     function getGame(id, callback) {
-        if (configMap.environment === "production") {
-            SPA.data.doCall(uri + configMap.endpoints + id, "GET").then(function(game) {
-                callback(game);
-            })
-        }
+        SPA.data.doCall("api/game/" + id, "GET").then(function(game) {
+            callback(game);
+        });
     }
 
     function getPlayers(gameId, callback) {
-        if (configMap.environment === "production") {
-            SPA.data.doCall(uri + "api/player/" + gameId, "GET").then(function(players) {
-                callback(players);
-            });
-        }
+        SPA.data.doCall("api/player/" + gameId, "GET").then(function(players) {
+            callback(players);
+        });
     }
 
     function createGame() {
-        if (configMap.environment === "production") {
-            let gameBoard = [
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, Disc.black, Disc.white, null, null, null],
-                [null, null, null, Disc.white, Disc.black, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null, null],
-            ];
+        let gameBoard = [
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, Disc.black, Disc.white, null, null, null],
+            [null, null, null, Disc.white, Disc.black, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+        ];
 
-            let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
-            return SPA.data.doCall(uri + configMap.endpoints, "POST", data);
-        }
+        let data = JSON.stringify({
+            "gameBoard": JSON.stringify(gameBoard)
+        });
+
+        return SPA.data.doCall("api/game/", "POST", data);
     }
 
     function createPlayer(gameId, username, password, hasTurn, discColor) {
-        if (configMap.environment === "production") {
-            let data = JSON.stringify({"gameId" : gameId, "username" : username, "password" : password, "hasTurn" : hasTurn, "discColor" : discColor});
-            return SPA.data.doCall(uri + "api/player", "POST", data);
-        }
+        let data = JSON.stringify({
+            "gameId": gameId,
+            "username": username,
+            "password": password,
+            "hasTurn": hasTurn,
+            "discColor": discColor
+        });
+
+        return SPA.data.doCall("api/player", "POST", data);
     }
 
     function updateGame(id, gameBoard) {
-        if (configMap.environment === "production") {
-            let data = JSON.stringify({"gameBoard" : JSON.stringify(gameBoard)});
-            return SPA.data.doCall(uri + configMap.endpoints + id, "PUT", data);
-        }
+        let data = JSON.stringify({
+            "gameBoard" : JSON.stringify(gameBoard)
+        });
+
+        return SPA.data.doCall("api/game/" + id, "PUT", data);
     }
 
     function AddPlayerToGame(gameId, player, opponent) {
-        if (configMap.environment === "production") {
-            player.discColor = opponent[0].discColor === Disc.white ? Disc.black : Disc.white;
+        player.discColor = opponent[0].discColor === Disc.white ? Disc.black : Disc.white;
 
-            let data = JSON.stringify({"gameId": gameId, "username": player.username, "hasTurn": !opponent[0].hasTurn, "discColor": player.discColor});
+        let data = JSON.stringify({
+            "gameId": gameId,
+            "username": player.username,
+            "hasTurn": !opponent[0].hasTurn,
+            "discColor": player.discColor
+        });
 
-            SPA.data.doCall(uri + "api/player/" + player.id, "PUT", data);
-        }
+        return SPA.data.doCall("api/player/" + player.id, "PUT", data);
     }
 
     function updatePlayerTurn(gameId, players) {
-        if (configMap.environment === "production") {
-            players.forEach(function (player) {
-                let data = JSON.stringify({"gameId": gameId, "username": player.username, "hasTurn": !player.hasTurn, "discColor": player.discColor});
-                SPA.data.doCall(uri + "api/player/" + player.id, "PUT", data);
+        players.forEach(function (player) {
+            let data = JSON.stringify({
+                "gameId": gameId,
+                "username": player.username,
+                "hasTurn": !player.hasTurn,
+                "discColor": player.discColor
             });
-        }
+
+            SPA.data.doCall("api/player/" + player.id, "PUT", data); // ToDo: Return?
+        });
     }
 
     return {
-        init,
         validateLogin,
         getGames,
         getGame,
