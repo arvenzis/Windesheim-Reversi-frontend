@@ -45,7 +45,6 @@ SPA.gameBoard = (function() {
     let columns = 8;
 
     function drawGameBoard() {
-        console.log("This player has to make a move: " + Player.discColor);
         $(GridContainer).empty(); // make sure the grid-container is redrawn
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
@@ -65,9 +64,13 @@ SPA.gameBoard = (function() {
                 }
             }
         }
+
         if (Player.hasTurn)
         {
+            $("#spa").append("It's your turn"); //Todo: Make this sexy
             calculatePossibleMoves();
+        } else {
+            $("#spa").append("It's your opponents turn"); //Todo: Make this sexy
         }
     }
 
@@ -90,6 +93,11 @@ SPA.gameBoard = (function() {
             replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn));
             replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn));
             replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn));
+
+            replaceOpponentRightAbove(parseInt(clickedRow), parseInt(clickedColumn));
+            replaceOpponentLeftAbove(parseInt(clickedRow), parseInt(clickedColumn));
+            replaceOpponentRightBelow(parseInt(clickedRow), parseInt(clickedColumn));
+            replaceOpponentLeftBelow(parseInt(clickedRow), parseInt(clickedColumn));
 
             SPA.api.updatePlayerTurn(GameId, Players);
 
@@ -246,11 +254,8 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i < 8; i++) {
-            if (GameBoard[row][column + iteration] === Opponent) {
+            if ((GameBoard[row][column + iteration] === Opponent) && (GameBoard[row][column + iteration + 1] === Opponent || GameBoard[row][column + iteration + 1] === Player.discColor)) {
                 GameBoard[row][column + iteration] = Player.discColor;
-                return;
-            }
-            else if(GameBoard[row][column + iteration] === Player.discColor || GameBoard[row][column + iteration] === null) {
                 return;
             }
             iteration++;
@@ -261,11 +266,8 @@ SPA.gameBoard = (function() {
         let iteration = 1;
 
         for (let i = column; i > -1; i--) {
-            if (GameBoard[row][column - iteration] === Opponent) {
+            if ((GameBoard[row][column - iteration] === Opponent) && (GameBoard[row][column - iteration - 1] === Opponent || GameBoard[row][column - iteration - 1] === Player.discColor)) {
                 GameBoard[row][column - iteration] = Player.discColor;
-                return;
-            }
-            else if(GameBoard[row][column - iteration] === Player.discColor || GameBoard[row][column - iteration] === null) {
                 return;
             }
             iteration++;
@@ -275,12 +277,9 @@ SPA.gameBoard = (function() {
     function replaceOpponentAbove(row, column) {
         let iteration = 1;
 
-        for (let i = column; i > -1; i--) {
-            if (GameBoard[row - iteration][column] === Opponent) {
+        for (let i = (row - 1); i > -1; i--) {
+            if ((GameBoard[row - iteration][column] === Opponent) && (GameBoard[row - iteration - 1][column] === Opponent || GameBoard[row - iteration - 1][column] === Player.discColor)) {
                 GameBoard[row - iteration][column] = Player.discColor;
-                return;
-            }
-            else if(GameBoard[row - iteration][column] === Player.discColor || GameBoard[row - iteration][column] === null) {
                 return;
             }
             iteration++;
@@ -290,18 +289,62 @@ SPA.gameBoard = (function() {
     function replaceOpponentBelow(row, column) {
         let iteration = 1;
 
-        for (let i = column; i < 8; i++) {
-            if (GameBoard[row + iteration][column] === Opponent) {
+        for (let i = (row + 1); i < 8; i++) {
+            if ((GameBoard[row + iteration][column] === Opponent) && (GameBoard[row + iteration + 1][column] === Opponent || GameBoard[row + iteration + 1][column] === Player.discColor)) {
                 GameBoard[row + iteration][column] = Player.discColor;
-                return;
-            }
-            else if(GameBoard[row + iteration][column] === Player.discColor || GameBoard[row + iteration][column] === null) {
                 return;
             }
             iteration++;
         }
     }
 
+    function replaceOpponentRightAbove(row, column) {
+        let iteration = 1;
+
+        for (let i = (row - 1); i > -1; i--) {
+            if ((GameBoard[row - iteration][column + iteration] === Opponent) && (GameBoard[row - iteration - 1][column + iteration + 1] === Opponent || GameBoard[row - iteration - 1][column + iteration + 1] === Player.discColor)) {
+                GameBoard[row - iteration][column + iteration] = Player.discColor;
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function replaceOpponentLeftAbove(row, column) {
+        let iteration = 1;
+
+        for (let i = (row - 1); i > -1; i--) {
+            if ((GameBoard[row - iteration][column - iteration] === Opponent) && (GameBoard[row - iteration - 1][column - iteration - 1] === Opponent || GameBoard[row - iteration - 1][column - iteration - 1] === Player.discColor)) {
+                GameBoard[row - iteration][column - iteration] = Player.discColor;
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function replaceOpponentRightBelow(row, column) {
+        let iteration = 1;
+
+        for (let i = (row + 1); i < 8; i++) {
+            if ((GameBoard[row + iteration][column + iteration] === Opponent) && (GameBoard[row + iteration + 1][column + iteration + 1] === Opponent || GameBoard[row + iteration + 1][column + iteration + 1] === Player.discColor)) {
+                GameBoard[row + iteration][column + iteration] = Player.discColor;
+                return;
+            }
+            iteration++;
+        }
+    }
+
+    function replaceOpponentLeftBelow(row, column) {
+        let iteration = 1;
+
+        for (let i = (row + 1); i < 8; i++) {
+            if ((GameBoard[row + iteration][column - iteration] === Opponent) && (GameBoard[row + iteration + 1][column - iteration - 1] === Opponent || GameBoard[row + iteration + 1][column - iteration - 1] === Player.discColor)) {
+                GameBoard[row + iteration][column - iteration] = Player.discColor;
+                return;
+            }
+            iteration++;
+        }
+    }
     return {
         init
     }
