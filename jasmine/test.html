@@ -7,14 +7,39 @@
     <script type="text/javascript" src="../jasmine/lib/jasmine/jasmine-html.js"></script>
     <script type="text/javascript" src="../jasmine/lib/jasmine/boot.js"></script>
     <script type="text/javascript" src="../jasmine/lib/jasmine/mock-ajax.js"></script>
-	<script type="text/javascript" src="../assets/js/spa.js"></script>
-    <script type="text/javascript" src="../assets/js/components/popup.js"></script>
-    <script type="text/javascript" src="../assets/js/helpers/alert-type-enum.js"></script>
+
+    <script type="text/javascript" src="../dist/js/app.js"></script>
 </head>
 <body>
 
 <script>
     SPA.init();
+
+    describe("Check defined javascript", function() {
+        it("Should be defined (SPA)", function() {
+            expect(SPA.init).toBeDefined();
+        });
+
+        it("Should be defined (api)", function() {
+            expect(SPA.api).toBeDefined();
+        });
+
+        it("Should be defined (data)", function() {
+            expect(SPA.data.init).toBeDefined();
+        });
+
+        it("Should be defined (reversi)", function() {
+            expect(SPA.reversi.init).toBeDefined();
+        });
+
+        it("Should be defined (game board)", function() {
+            expect(SPA.gameBoard.init).toBeDefined();
+        });
+
+        it("Should be defined (login)", function() {
+            expect(SPA.login.init).toBeDefined();
+        });
+    });
 
     describe("Mock get games requests", function() {
         beforeEach(function() {
@@ -22,16 +47,16 @@
         });
 
         it("Should show an error on a bad request", function() {
-            spyOn(SPA.Popup, "show");
+            spyOn(SPA.popup, "show");
 
-            let request = jasmine.Ajax.mostRecent();
+            let request = jasmine.Ajax.requests.mostRecent();
             request.respondWith({
                "status": 401,
                 "contentType": "text/plain",
                 "responseText": "FORBIDDEN"
             });
 
-            expect(SPA.Popup.show).toHaveBeenCalled();
+            expect(SPA.popup.show).toHaveBeenCalled();
         });
 
         it("Should return games when api/getGames is called", function() {
@@ -45,8 +70,8 @@
 
     describe("Testing the popup", function() {
        it("Should show popup", function() {
-           spyOn(SPA.Popup, "show");
-           expect(SPA.Popup.show).toHaveBeenCalled();
+           spyOn(SPA.popup, "show");
+           expect(SPA.popup.show).toHaveBeenCalled();
        });
     });
 </script>
