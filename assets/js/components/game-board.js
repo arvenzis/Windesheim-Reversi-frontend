@@ -16,7 +16,6 @@ SPA.gameBoard = (function() {
     }
 
     function prepareGameBoard() {
-        console.log("Uitgevoerd");
         SPA.api.getGame(GameId, function(game) {
             GameBoard = JSON.parse(game[0].gameBoard);
 
@@ -65,6 +64,10 @@ SPA.gameBoard = (function() {
             }
         }
 
+        showHasTurn();
+    }
+
+    function showHasTurn() {
         if (Player.hasTurn)
         {
             $("#spa").append("It's your turn"); //Todo: Make this sexy
@@ -89,15 +92,7 @@ SPA.gameBoard = (function() {
 
         if (clickedRow !== undefined || clickedColumn !== undefined) {
             GameBoard[clickedRow][clickedColumn] = Player.discColor;
-            replaceOpponentRight(parseInt(clickedRow), parseInt(clickedColumn));
-            replaceOpponentLeft(parseInt(clickedRow), parseInt(clickedColumn));
-            replaceOpponentAbove(parseInt(clickedRow), parseInt(clickedColumn));
-            replaceOpponentBelow(parseInt(clickedRow), parseInt(clickedColumn));
-
-            replaceOpponentRightAbove(parseInt(clickedRow), parseInt(clickedColumn));
-            replaceOpponentLeftAbove(parseInt(clickedRow), parseInt(clickedColumn));
-            replaceOpponentRightBelow(parseInt(clickedRow), parseInt(clickedColumn));
-            replaceOpponentLeftBelow(parseInt(clickedRow), parseInt(clickedColumn));
+            replaceAdjacentOpponents(clickedRow, clickedColumn);
 
             SPA.api.updatePlayerTurn(GameId, Players);
 
@@ -345,6 +340,19 @@ SPA.gameBoard = (function() {
             iteration++;
         }
     }
+
+    function replaceAdjacentOpponents(row, column) {
+        replaceOpponentRight(parseInt(row), parseInt(column));
+        replaceOpponentLeft(parseInt(row), parseInt(column));
+        replaceOpponentAbove(parseInt(row), parseInt(column));
+        replaceOpponentBelow(parseInt(row), parseInt(column));
+
+        replaceOpponentRightAbove(parseInt(row), parseInt(column));
+        replaceOpponentLeftAbove(parseInt(row), parseInt(column));
+        replaceOpponentRightBelow(parseInt(row), parseInt(column));
+        replaceOpponentLeftBelow(parseInt(row), parseInt(column));
+    }
+
     return {
         init
     }

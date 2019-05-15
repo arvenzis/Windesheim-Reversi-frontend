@@ -4,7 +4,9 @@ SPA.api = (function() {
          let loginData = JSON.stringify({"username" : username, "password" : password});
          SPA.data.doCall("api/auth", "POST", loginData).then(function(player) {
              callback(player);
-         });
+         }).catch(function() {
+             callback(false);
+         })
     }
 
     function getGames(callback) {

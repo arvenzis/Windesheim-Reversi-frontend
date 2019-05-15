@@ -4,11 +4,6 @@ var SPA = (function() {
         $("body").append("<section id='spa'></section>");
         SPA.login.init();
 
-
-        //
-        // $("#spa").append("<div id='grid-container'></div>");
-
-
         // SPA.api.createGame();
         // SPA.api.createGame();
         // SPA.api.createGame();
@@ -21,15 +16,13 @@ var SPA = (function() {
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
-            [null, null, null, Disc.black, Disc.white, null, null, null],
             [null, null, null, Disc.white, Disc.black, null, null, null],
+            [null, null, null, Disc.black, Disc.white, null, null, null],
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null],
         ];
              SPA.api.updateGame(2, gameBoard);
-
-        //SPA.popup.show("Karen", "Is heel aardig", AlertType.success);
     }
 
     return {
