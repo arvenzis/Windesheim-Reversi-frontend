@@ -33,6 +33,7 @@ const order = require('gulp-order');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglifyjs');
 const js_files = [
+    'assets/js/*.js',
     'assets/js/**/*.js',
 ];
 
