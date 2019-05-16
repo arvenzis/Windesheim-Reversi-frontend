@@ -12,6 +12,7 @@ SPA.gameBoard = (function() {
 
     function init(id) {
         GameId = id;
+        SPA.popup.show("Hi again!", "The game has been loaded", AlertType.success);
         prepareGameBoard();
     }
 

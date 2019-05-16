@@ -1,7 +1,6 @@
 #popup
 {
-  padding: 15px;
-  margin-bottom: 20px;
+  padding: 15px 15px 0 15px;
   border: 1px solid transparent;
   position: relative;
 
@@ -21,7 +20,7 @@
   .message {
     font-size: 25px;
     font-family: Arial, sans-serif;
-    margin-left: 7%;
+    margin-left: 13%;
   }
 
   .button-container {
@@ -90,6 +89,9 @@
 
 #slide-up, #slide-down {
   max-height: 0;
+  top: 0;
+  position: absolute;
+  width: 50%;
   overflow-y: hidden;
   transition: max-height 0.3s ease-out;
 }
