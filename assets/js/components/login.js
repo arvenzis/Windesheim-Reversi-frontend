@@ -18,8 +18,6 @@ SPA.login = (function() {
                     SPA.sessionStorage.setPlayer(result);
                     return SPA.reversi.init();
                 }
-
-                SPA.popup.show("Login failed", "The credentials don't appear to be in our database", AlertType.error); // Todo: sliding transition werkt niet meer?
             });
         });
     }

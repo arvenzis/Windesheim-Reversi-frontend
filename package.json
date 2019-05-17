@@ -22,6 +22,7 @@
     "gulp-order": "^1.2.0",
     "gulp-sass": "^4.0.2",
     "gulp-uglifyjs": "^0.6.2",
+    "jasmine-ajax": "^4.0.0",
     "node-sass": "^4.11.0"
   },
   "scripts": {

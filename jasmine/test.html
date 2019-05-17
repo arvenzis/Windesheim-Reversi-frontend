@@ -14,6 +14,15 @@
 
 <script>
     SPA.init();
+    SPA.sessionStorage.setPlayer({"id": 1, "gameId": 2, "username": "Karen", "password": "Snaas", "hasTurn": false, "discColor": "white" });
+
+    describe("Testing the popup", function() {
+        it("Should show popup", function() {
+            spyOn(SPA.popup, "show");
+            SPA.gameBoard.init(2);
+            expect(SPA.popup.show).toHaveBeenCalled();
+        });
+    });
 
     describe("Check defined javascript", function() {
         it("Should be defined (SPA)", function() {
@@ -41,41 +50,83 @@
         });
     });
 
-    describe("Mock get games requests", function() {
+    const uri = "https://localhost:5003/";
+
+    let testObj = {
+        ajaxFunction: function(url) {
+            $.ajax({
+                url: uri
+            }).done(this.successFunction.bind(this));
+        },
+        successFunction: function(data) {}
+    };
+
+    describe("Mock request", function() {
         beforeEach(function() {
             jasmine.Ajax.install();
         });
 
-        it("Should show an error on a bad request", function() {
-            spyOn(SPA.popup, "show");
+        it('returns all games', function() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(args) {
+                if (this.readyState === this.DONE) {
+                    testObj.successFunction(this.responseText);
+                }
+            };
+            spyOn(testObj, 'successFunction').and.callThrough();
+            xhr.open("GET", uri + "api/game");
+            xhr.send();
 
-            let request = jasmine.Ajax.requests.mostRecent();
-            request.respondWith({
-               "status": 401,
+            jasmine.Ajax.requests.mostRecent().respondWith({
+                "status": 200,
+                "contentType": 'text/plain',
+                "responseText": 'Hooray, all games have been returned'
+            });
+            expect(testObj.successFunction).toHaveBeenCalledWith('Hooray, all games have been returned');
+        });
+
+        it('returns specific game', function() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(args) {
+                if (this.readyState === this.DONE) {
+                    testObj.successFunction(this.responseText);
+                }
+            };
+            spyOn(testObj, 'successFunction').and.callThrough();
+            xhr.open("GET", uri + "api/game/1");
+            xhr.send();
+
+            jasmine.Ajax.requests.mostRecent().respondWith({
+                "status": 200,
+                "contentType": 'text/plain',
+                "responseText": 'Hooray, game 1 has been returned'
+            });
+            expect(testObj.successFunction).toHaveBeenCalledWith('Hooray, game 1 has been returned');
+        });
+
+        it("Should show forbidden on bad request", function() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(args) {
+                if (this.readyState === this.DONE) {
+                    testObj.successFunction(this.responseText);
+                }
+            };
+            spyOn(testObj, 'successFunction').and.callThrough();
+            xhr.open("GET", uri + "api/game");
+            xhr.send();
+
+            jasmine.Ajax.requests.mostRecent().respondWith({
+                "status": 401,
                 "contentType": "text/plain",
                 "responseText": "FORBIDDEN"
             });
-
-            expect(SPA.popup.show).toHaveBeenCalled();
-        });
-
-        it("Should return games when api/getGames is called", function() {
-
+            expect(testObj.successFunction).toHaveBeenCalledWith('FORBIDDEN');
         });
 
         afterEach(function() {
             jasmine.Ajax.uninstall();
         });
     });
-
-    describe("Testing the popup", function() {
-       it("Should show popup", function() {
-           spyOn(SPA.popup, "show");
-           expect(SPA.popup.show).toHaveBeenCalled();
-       });
-    });
 </script>
-
-
 </body>
 </html>
