@@ -40,6 +40,7 @@ SPA.gameBoard = (function() {
                     });
                 });
                 $("#spa").empty().append("<div id='grid-container'></div>");
+                showHasTurn();
                 drawGameBoard();
                 resolve();
             });
@@ -70,16 +71,19 @@ SPA.gameBoard = (function() {
             }
         }
 
-        showHasTurn();
+        if (Player.hasTurn)
+        {
+            calculatePossibleMoves();
+        }
     }
 
     function showHasTurn() {
         if (Player.hasTurn)
         {
-            $("#spa").append("It's your turn"); //Todo: Make this sexy
-            calculatePossibleMoves();
+            SPA.showTurn.getTemplate(Player.discColor);
+
         } else {
-            $("#spa").append("It's your opponents turn"); //Todo: Make this sexy
+            SPA.showTurn.getTemplate(Opponent);
         }
     }
 
@@ -105,6 +109,7 @@ SPA.gameBoard = (function() {
             SPA.api.updateGame(GameId, GameBoard).then(function() {
                 prepareGameBoard().then(function() {
                     SPA.chart.init($('.black-disc').length, $('.white-disc').length);
+                    showHasTurn();
                 });
             });
         }
@@ -144,7 +149,6 @@ SPA.gameBoard = (function() {
         }
     }
 
-    /** Kan dit niet beter? **/
     function checkLeft(row, column) {
         let iteration = 1;
         for (let i = column; i > -1; i--) {
