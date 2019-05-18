@@ -263,7 +263,6 @@ SPA.gameBoard = (function() {
         for (let i = column; i < 8; i++) {
             if ((GameBoard[row][column + iteration] === Opponent) && (GameBoard[row][column + iteration + 1] === Opponent || GameBoard[row][column + iteration + 1] === Player.discColor)) {
                 GameBoard[row][column + iteration] = Player.discColor;
-                return;
             }
             iteration++;
         }
@@ -275,7 +274,6 @@ SPA.gameBoard = (function() {
         for (let i = column; i > -1; i--) {
             if ((GameBoard[row][column - iteration] === Opponent) && (GameBoard[row][column - iteration - 1] === Opponent || GameBoard[row][column - iteration - 1] === Player.discColor)) {
                 GameBoard[row][column - iteration] = Player.discColor;
-                return;
             }
             iteration++;
         }
@@ -287,7 +285,6 @@ SPA.gameBoard = (function() {
         for (let i = (row - 1); i > -1; i--) {
             if ((GameBoard[row - iteration][column] === Opponent) && (GameBoard[row - iteration - 1][column] === Opponent || GameBoard[row - iteration - 1][column] === Player.discColor)) {
                 GameBoard[row - iteration][column] = Player.discColor;
-                return;
             }
             iteration++;
         }
@@ -299,7 +296,6 @@ SPA.gameBoard = (function() {
         for (let i = (row + 1); i < 8; i++) {
             if ((GameBoard[row + iteration][column] === Opponent) && (GameBoard[row + iteration + 1][column] === Opponent || GameBoard[row + iteration + 1][column] === Player.discColor)) {
                 GameBoard[row + iteration][column] = Player.discColor;
-                return;
             }
             iteration++;
         }
@@ -311,7 +307,6 @@ SPA.gameBoard = (function() {
         for (let i = (row - 1); i > -1; i--) {
             if ((GameBoard[row - iteration][column + iteration] === Opponent) && (GameBoard[row - iteration - 1][column + iteration + 1] === Opponent || GameBoard[row - iteration - 1][column + iteration + 1] === Player.discColor)) {
                 GameBoard[row - iteration][column + iteration] = Player.discColor;
-                return;
             }
             iteration++;
         }
@@ -323,7 +318,6 @@ SPA.gameBoard = (function() {
         for (let i = (row - 1); i > -1; i--) {
             if ((GameBoard[row - iteration][column - iteration] === Opponent) && (GameBoard[row - iteration - 1][column - iteration - 1] === Opponent || GameBoard[row - iteration - 1][column - iteration - 1] === Player.discColor)) {
                 GameBoard[row - iteration][column - iteration] = Player.discColor;
-                return;
             }
             iteration++;
         }
@@ -335,7 +329,6 @@ SPA.gameBoard = (function() {
         for (let i = (row + 1); i < 8; i++) {
             if ((GameBoard[row + iteration][column + iteration] === Opponent) && (GameBoard[row + iteration + 1][column + iteration + 1] === Opponent || GameBoard[row + iteration + 1][column + iteration + 1] === Player.discColor)) {
                 GameBoard[row + iteration][column + iteration] = Player.discColor;
-                return;
             }
             iteration++;
         }
@@ -347,7 +340,6 @@ SPA.gameBoard = (function() {
         for (let i = (row + 1); i < 8; i++) {
             if ((GameBoard[row + iteration][column - iteration] === Opponent) && (GameBoard[row + iteration + 1][column - iteration - 1] === Opponent || GameBoard[row + iteration + 1][column - iteration - 1] === Player.discColor)) {
                 GameBoard[row + iteration][column - iteration] = Player.discColor;
-                return;
             }
             iteration++;
         }
