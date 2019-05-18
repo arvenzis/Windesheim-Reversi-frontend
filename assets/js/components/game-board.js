@@ -7,37 +7,42 @@ SPA.gameBoard = (function() {
     let GridContainer = '#grid-container';
 
     window.setInterval(function(){
-        //prepareGameBoard();
+        prepareGameBoard();
     }, 1000);
 
     function init(id) {
         GameId = id;
         SPA.popup.show("Hi again!", "The game has been loaded", AlertType.success);
-        prepareGameBoard();
+        prepareGameBoard().then(function() {
+            SPA.chart.init($('.black-disc').length, $('.white-disc').length);
+        });
     }
 
     function prepareGameBoard() {
-        SPA.api.getGame(GameId, function(game) {
-            GameBoard = JSON.parse(game[0].gameBoard);
+        return new Promise(function(resolve) {
+            SPA.api.getGame(GameId, function(game) {
+                GameBoard = JSON.parse(game[0].gameBoard);
 
-            Player = SPA.sessionStorage.getPlayer();
-            if (Player.discColor === Disc.white) {
-                Opponent = Disc.black;
-            }
-            else if(Player.discColor === Disc.black) {
-                Opponent = Disc.white;
-            }
-            SPA.api.getPlayers(GameId, function(players) {
-                Players = players;
-                players.forEach(function(player) {
-                    if (player.id === SPA.sessionStorage.getPlayer().id)
-                    {
-                        SPA.sessionStorage.setPlayer(player);
-                    }
+                Player = SPA.sessionStorage.getPlayer();
+                if (Player.discColor === Disc.white) {
+                    Opponent = Disc.black;
+                }
+                else if(Player.discColor === Disc.black) {
+                    Opponent = Disc.white;
+                }
+                SPA.api.getPlayers(GameId, function(players) {
+                    Players = players;
+                    players.forEach(function(player) {
+                        if (player.id === SPA.sessionStorage.getPlayer().id)
+                        {
+                            SPA.sessionStorage.setPlayer(player);
+                        }
+                    });
                 });
+                $("#spa").empty().append("<div id='grid-container'></div>");
+                drawGameBoard();
+                resolve();
             });
-            $("#spa").empty().append("<div id='grid-container'></div>");
-            drawGameBoard();
         });
     }
 
@@ -98,7 +103,9 @@ SPA.gameBoard = (function() {
             SPA.api.updatePlayerTurn(GameId, Players);
 
             SPA.api.updateGame(GameId, GameBoard).then(function() {
-                prepareGameBoard();
+                prepareGameBoard().then(function() {
+                    SPA.chart.init($('.black-disc').length, $('.white-disc').length);
+                });
             });
         }
     });

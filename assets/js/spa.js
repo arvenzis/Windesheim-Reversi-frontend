@@ -14,17 +14,17 @@ var SPA = (function() {
 
 
 
-        // let gameBoard = [
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, Disc.white, Disc.black, null, null, null],
-        //     [null, null, null, Disc.black, Disc.white, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        //     [null, null, null, null, null, null, null, null],
-        // ];
-        //      SPA.api.updateGame(2, gameBoard);
+        let gameBoard = [
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, Disc.white, Disc.black, null, null, null],
+            [null, null, null, Disc.black, Disc.white, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+        ];
+             SPA.api.updateGame(2, gameBoard);
     }
 
     return {
