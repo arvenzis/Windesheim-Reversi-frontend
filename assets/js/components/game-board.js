@@ -35,7 +35,7 @@ SPA.gameBoard = (function() {
                 SPA.api.getPlayers(GameId, function(players) {
                     Players = players;
                     players.forEach(function(player) {
-                        if (player.id === SPA.sessionStorage.getPlayer().id)
+                        if (player.id === Player.id)
                         {
                             SPA.sessionStorage.setPlayer(player);
                         }
