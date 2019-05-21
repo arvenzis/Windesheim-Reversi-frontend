@@ -7,7 +7,7 @@ SPA.gameBoard = (function() {
     let GridContainer = '#grid-container';
 
     window.setInterval(function(){
-        //prepareGameBoard();
+        prepareGameBoard();
     }, 1000);
 
     function init(id) {
