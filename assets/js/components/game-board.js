@@ -7,14 +7,14 @@ SPA.gameBoard = (function() {
     let GridContainer = '#grid-container';
 
     window.setInterval(function(){
-        prepareGameBoard();
+        //prepareGameBoard();
     }, 1000);
 
     function init(id) {
         GameId = id;
         Player = SPA.sessionStorage.getPlayer();
 
-        SPA.popup.show("Hi " + Player.username + "!", "The game has been loaded", AlertType.success);
+        SPA.popup.show("Hi " + Player.username + "!", "The game has been loaded. You are " + Player.discColor + "!", AlertType.success);
         $(".chart-container").css("display", "block");
         prepareGameBoard().then(function() {
             SPA.chart.init($('.black-disc').length, $('.white-disc').length);
