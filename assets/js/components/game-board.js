@@ -26,6 +26,7 @@ SPA.gameBoard = (function() {
             SPA.api.getGame(GameId, function(game) {
                 GameBoard = JSON.parse(game[0].gameBoard);
 
+                Player = SPA.sessionStorage.getPlayer();
                 if (Player.discColor === Disc.white) {
                     Opponent = Disc.black;
                 }
@@ -35,7 +36,7 @@ SPA.gameBoard = (function() {
                 SPA.api.getPlayers(GameId, function(players) {
                     Players = players;
                     players.forEach(function(player) {
-                        if (player.id === Player.id)
+                        if (player.id === SPA.sessionStorage.getPlayer().id)
                         {
                             SPA.sessionStorage.setPlayer(player);
                         }
