@@ -21,6 +21,7 @@ SPA.reversi = (function() {
             loadingText.text("Searching for opponents");
             //Zo nee, kijk of er andere spelers zijn die nog geen tegenstander hebben
             addPlayerToExistingGame().then(function() {
+                console.log(player.gameId);
                 SPA.gameBoard.init(player.gameId);
             }).catch(function() {
                 // Zo nee, maak een nieuw spel

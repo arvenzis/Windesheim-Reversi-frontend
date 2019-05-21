@@ -13,6 +13,7 @@ SPA.gameBoard = (function() {
     function init(id) {
         GameId = id;
         SPA.popup.show("Hi again!", "The game has been loaded", AlertType.success);
+        $(".chart-container").css("display", "block");
         prepareGameBoard().then(function() {
             SPA.chart.init($('.black-disc').length, $('.white-disc').length);
         });
