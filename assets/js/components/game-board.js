@@ -12,7 +12,9 @@ SPA.gameBoard = (function() {
 
     function init(id) {
         GameId = id;
-        SPA.popup.show("Hi again!", "The game has been loaded", AlertType.success);
+        Player = SPA.sessionStorage.getPlayer();
+
+        SPA.popup.show("Hi " + Player.username + "!", "The game has been loaded", AlertType.success);
         $(".chart-container").css("display", "block");
         prepareGameBoard().then(function() {
             SPA.chart.init($('.black-disc').length, $('.white-disc').length);
@@ -24,7 +26,6 @@ SPA.gameBoard = (function() {
             SPA.api.getGame(GameId, function(game) {
                 GameBoard = JSON.parse(game[0].gameBoard);
 
-                Player = SPA.sessionStorage.getPlayer();
                 if (Player.discColor === Disc.white) {
                     Opponent = Disc.black;
                 }
