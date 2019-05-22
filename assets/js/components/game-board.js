@@ -13,9 +13,11 @@ SPA.gameBoard = (function() {
     function init(id) {
         GameId = id;
         Player = SPA.sessionStorage.getPlayer();
+        Opponent = getOpponentDisc();
 
         SPA.popup.show("Hi " + Player.username + "!", "The game has been loaded. You are " + Player.discColor + "!", AlertType.success);
         $(".chart-container").css("display", "block");
+
         prepareGameBoard().then(function() {
             SPA.chart.init($('.black-disc').length, $('.white-disc').length);
         });
@@ -27,12 +29,7 @@ SPA.gameBoard = (function() {
                 GameBoard = JSON.parse(game[0].gameBoard);
 
                 Player = SPA.sessionStorage.getPlayer();
-                if (Player.discColor === Disc.white) {
-                    Opponent = Disc.black;
-                }
-                else if(Player.discColor === Disc.black) {
-                    Opponent = Disc.white;
-                }
+
                 SPA.api.getPlayers(GameId, function(players) {
                     Players = players;
                     players.forEach(function(player) {
@@ -43,17 +40,16 @@ SPA.gameBoard = (function() {
                     });
                 });
                 $("#spa").empty().append("<div id='grid-container'></div>");
+
                 showHasTurn();
                 drawGameBoard();
+
                 resolve();
             });
         });
     }
 
-    let rows = 8;
-    let columns = 8;
-
-    function drawGameBoard() {
+    function drawGameBoard(rows = 8, columns = 8) {
         $(GridContainer).empty(); // make sure the grid-container is redrawn
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
@@ -80,14 +76,21 @@ SPA.gameBoard = (function() {
         }
     }
 
+    function getOpponentDisc() {
+        if (Player.discColor === Disc.white) {
+            return Disc.black;
+        }
+        else if(Player.discColor === Disc.black) {
+            return Disc.white;
+        }
+    }
+
     function showHasTurn() {
         if (Player.hasTurn)
         {
-            SPA.showTurn.getTemplate(Player.discColor);
-
-        } else {
-            SPA.showTurn.getTemplate(Opponent);
+            return SPA.showTurn.getTemplate(Player.discColor);
         }
+        return SPA.showTurn.getTemplate(Opponent);
     }
 
     function createDisc(color) {
@@ -118,7 +121,7 @@ SPA.gameBoard = (function() {
         }
     });
 
-    function calculatePossibleMoves() {
+    function calculatePossibleMoves(rows = 8, columns = 8) {
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
 
