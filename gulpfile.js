@@ -48,6 +48,37 @@ function js() {
         .pipe(gulp.dest('./dist/js'));
 }
 
+const handlebars = require('gulp-handlebars');
+const wrap = require('gulp-wrap');
+const declare = require('gulp-declare');
+
+gulp.task('vendor', function(){
+    return gulp.src(['vendor/handlebars-runtime-3/handlebars-v4.1.2.js'])
+        .pipe(concat('vendor.js'))
+        .pipe(gulp.dest('dist/js'));
+});
+
+function hbs() {
+    return src(['./assets/templates/**/*.hbs'])
+    // Compile each Handlebars template source file to a template function
+        .pipe(handlebars())
+        // Wrap each template function in a call to Handlebars.template
+        .pipe(wrap('Handlebars.template(<%= contents %>)'))
+        // Declare template functions as properties and sub-properties of MyApp.templates
+        .pipe(declare({
+            namespace: 'Reversi',
+            noRedeclare: true, // Avoid duplicate declarations
+            processName: function(filePath) {
+                // Allow nesting based on path using gulp-declare's processNameByPath()
+                // You can remove this option completely if you aren't using nested folders
+                // Drop the client/templates/ folder from the namespace path by removing it from the filePath
+                return declare.processNameByPath(filePath.replace('client/templates/', ''));
+            }
+        }))
+        .pipe(concat('templates.js'))
+        .pipe(gulp.dest('dist/js/'));
+}
+
 // Watch files
 function watch() {
     gulp.watch(html_files, html);
@@ -56,4 +87,5 @@ function watch() {
 }
 
 exports.watch = watch;
-exports.build = parallel(html, css, js);
+exports.build = parallel(html, css, js, hbs);
+

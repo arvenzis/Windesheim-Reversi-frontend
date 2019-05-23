@@ -88,9 +88,10 @@ SPA.gameBoard = (function() {
     function showHasTurn() {
         if (Player.hasTurn)
         {
-            return SPA.showTurn.getTemplate(Player.discColor);
+            return $('body').append(Reversi.assets.templates.showTurn({color: Player.discColor}));
         }
-        return SPA.showTurn.getTemplate(Opponent);
+        return $('body').append(Reversi.assets.templates.showTurn({color: Opponent}));
+
     }
 
     function createDisc(color) {
