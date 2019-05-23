@@ -52,14 +52,18 @@ const handlebars = require('gulp-handlebars');
 const wrap = require('gulp-wrap');
 const declare = require('gulp-declare');
 
-gulp.task('vendor', function(){
-    return gulp.src(['vendor/handlebars-runtime-3/handlebars-v4.1.2.js'])
+const vendors_files = ['vendor/handlebars-runtime-3/handlebars-v4.1.2.js'];
+function vendor() {
+    return src(vendors_files)
         .pipe(concat('vendor.js'))
         .pipe(gulp.dest('dist/js'));
-});
+}
 
+const hbs_files = [
+    './assets/templates/**/*.hbs'
+];
 function hbs() {
-    return src(['./assets/templates/**/*.hbs'])
+    return src(hbs_files)
     // Compile each Handlebars template source file to a template function
         .pipe(handlebars())
         // Wrap each template function in a call to Handlebars.template
@@ -84,8 +88,10 @@ function watch() {
     gulp.watch(html_files, html);
     gulp.watch(sass_files, css);
     gulp.watch(js_files, js);
+    gulp.watch(vendors_files, vendor);
+    gulp.watch(hbs_files, hbs);
 }
 
 exports.watch = watch;
-exports.build = parallel(html, css, js, hbs);
+exports.build = parallel(html, css, js, hbs, vendor);
 
